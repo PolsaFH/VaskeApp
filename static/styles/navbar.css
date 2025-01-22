@@ -1,0 +1,145 @@
+/* General styles */
+
+.top-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* padding: 0 20px; */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.navbar-toggle {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0px 15px;
+    margin-top: -2px;
+    font-size: var(--big-font-size);
+    cursor: pointer;
+    border-radius: 5px;
+    position: absolute;
+}
+
+.navbar-toggle:hover {
+    background-color: var(--secondary-color);
+}
+
+.logo {
+    font-size: var(--big-font-size);
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+
+.logo a {
+    text-decoration: none;
+    color: white;
+}
+
+/* Sidebar Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100vh;
+    background-color: var(--primary-color);
+    color: white;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    padding-top: 60px;
+
+}
+
+.navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar ul li {
+    position: relative;
+    border-bottom: 1px solid white;
+}
+
+.navbar ul li a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 15px 20px;
+    font-size: var(--medium-font-size);
+}
+
+.navbar ul li a:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Submenu styles */
+.submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 200px;
+    background-color: var(--secondary-color);
+    display: none;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.submenu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+.submenu ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 15px 20px;
+    font-size: var(--medium-font-size);
+}
+
+.submenu ul li a:hover {
+    background-color: var(--primary-color);
+}
+
+/* Show submenu on hover */
+.has-submenu:hover .submenu {
+    display: block;
+}
+
+/* Bottom links */
+.bottom-links {
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-links a {
+    color: white;
+    text-decoration: none;
+    padding: 15px 20px;
+    text-align: center;
+    font-size: var(--medium-font-size);
+}
+
+.bottom-links a:first-child {
+    border-bottom: 1px solid white;
+}
+
+.bottom-links a:hover {
+    background-color: var(--secondary-color);
+}
+
+

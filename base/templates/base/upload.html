@@ -1,0 +1,94 @@
+
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'styles/upload.css' %}">
+
+<main class="content">
+    <h1>Lag Firkant</h1>
+    <div class="controls">
+      <label for="width">Bredde:</label>
+      <input type="number" id="width" value="50" />
+      <label for="height">Høyde:</label>
+      <input type="number" id="height" value="50" />
+      <button id="addSquare">Legg til firkant</button>
+      <button id="screenshotButton">Ta skjermbilde</button>
+    </div>
+    <div class="container" id="squareContainer"></div>
+</main>
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script>
+  const container = document.getElementById('squareContainer');
+  const addSquareButton = document.getElementById('addSquare');
+  const screenshotButton = document.getElementById('screenshotButton');
+
+  addSquareButton.addEventListener('click', () => {
+    const width = parseInt(document.getElementById('width').value);
+    const height = parseInt(document.getElementById('height').value);
+
+    const square = document.createElement('div');
+    square.classList.add('square');
+    square.style.width = `${width}px`;
+    square.style.height = `${height}px`;
+
+    square.style.left = '0px';
+    square.style.top = '0px';
+
+    makeDraggable(square);
+
+    container.appendChild(square);
+  });
+
+  function makeDraggable(element) {
+    let offsetX, offsetY, isDragging = false;
+
+    element.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      const rect = element.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      element.style.zIndex = 1000;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      let x = e.clientX - offsetX - container.getBoundingClientRect().left;
+      let y = e.clientY - offsetY - container.getBoundingClientRect().top;
+
+      element.style.left = `${x}px`;
+      element.style.top = `${y}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      element.style.zIndex = 'auto';
+    });
+  }
+
+  screenshotButton.addEventListener('click', async () => {
+    try {
+      // Request permission
+      const permission = await navigator.permissions.query({ name: 'clipboard-write' });
+      if (permission.state === 'granted' || permission.state === 'prompt') {
+        html2canvas(container, { scale: 1 }).then(canvas => {
+          canvas.toBlob(blob => {
+            const item = new ClipboardItem({ 'image/png': blob });
+            navigator.clipboard.write([item]).then(() => {
+              alert('Skjermbilde kopiert til utklippstavlen!');
+            });
+          });
+        });
+      } else {
+        alert('Utklippstavletilgang er blokkert. Vennligst aktiver den manuelt.');
+      }
+    } catch (error) {
+      alert('En feil oppsto ved tilgang til utklippstavlen: ' + error.message);
+    }
+  });
+</script>
+
+{% endblock %}

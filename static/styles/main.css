@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+/* Colors */
+:root {
+    --primary-color: #315EB0;
+    --secondary-color: #5278BE;
+    --common-color: white;
+    --normal-font-size: 1rem;
+    --medium-font-size: 1.25rem;
+    --big-font-size: 2rem;
+}
+
+
+/* Content styles */
+.content {
+    margin-top: 60px; /* Leave space for top-navbar */
+    padding: 20px;
+    transition: transform 0.3s ease; /* Smooth animation for content movement */
+}
+
+.content.shifted {
+    transform: translateX(250px); /* Shift content when navbar is open */
+}

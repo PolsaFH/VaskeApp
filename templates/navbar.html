@@ -1,0 +1,32 @@
+{% load static %}
+
+<header class="top-navbar">
+    <button class="navbar-toggle" onclick="toggleNavbar()">☰</button>
+    
+        <h1 class="logo"><a href="{% url 'home' %}">Vaske App</a></h1>
+    
+  </header>
+  <div class="navbar">
+    <ul>
+      <li class="has-submenu">
+        <a href="">Floor plan</a>
+        <div class="submenu">
+          <ul>
+            <li><a href="#sub1">Level 1</a></li>
+            <li><a href="#sub2">Level 2</a></li>
+            <li><a href="#sub3">Level 3</a></li>
+          </ul>
+        </div>
+      </li>
+      <li><a href="#about">Equipment</a></li>
+      <li><a href="#services">Daily plan</a></li>
+      <li><a href="#contact">Notification</a></li>
+      <li><a href="{% url 'upload' %}">Upload</a></li>
+
+    </ul>
+    <div class="bottom-links">
+        <a href="#privacy">Settings</a>
+        <a href="#terms">Logout</a>
+    </div>
+  </div>
+<script src="{% static 'js/navbar.js' %}"></script>

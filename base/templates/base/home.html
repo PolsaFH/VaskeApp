@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<main class="content">
+    <div class="">
+        {% for schem in schems %}
+
+        <div class="">
+            <h5>{{ schem.id }} ---- <a href="{% url 'schematic' schem.id %}">{{ schem.name }}</a></h5>
+        </div>
+
+        {% endfor %}
+    </div>
+</main>
+
+{% endblock %}
