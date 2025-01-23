@@ -1,0 +1,100 @@
+body {
+    background-color: var(--light-color);
+}
+
+.form {
+    width: 95%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    margin-top: 20%;
+    background-color: white;
+}
+
+
+
+.form form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.loginHeader {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.form-group:last-of-type {
+    margin-bottom: 10px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid black;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+    background-color: white;
+}
+
+.form-label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: black;
+    font-size: 1rem;
+    transition: all 0.3s;
+    pointer-events: none;
+    /* background-color: white; */
+}
+
+.form-input:focus {
+    border: 1px solid var(--secondary-color);
+}
+
+.form-input:focus + .form-label,
+.form-input:not(:placeholder-shown) + .form-label {
+    top: -9px;
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+}
+
+input:-webkit-autofill + .form-label {
+    top: -9px;
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+}
+
+
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--secondary-color);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+input[type="submit"]:hover {
+    background-color: var(--primary-color);
+}
+
+.form p {
+    text-align: center;
+    font-size: var(--normal-font-size);
+}

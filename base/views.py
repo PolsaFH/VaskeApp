@@ -24,6 +24,7 @@ def loginPage(request):
             user = User.objects.get(username=username)
         except:
             messages.error(request, 'Username is incorrect')
+            return redirect('login')
 
         user = authenticate(request, username=username, password=password)
 
