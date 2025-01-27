@@ -8,7 +8,8 @@
 
 
 <main>
-    <div class="form">
+    {% if not type %}
+    <div class="form" id="login">
         <h1 class="loginHeader">Login</h1>
         <form action="" method="post">
             {% csrf_token %}
@@ -27,12 +28,52 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-            <p>Register <a href="">here</a></p>
-            <input type="submit" value="Login">
+            <p>Register <a href="?type=register">here</a></p>
+            <input type="submit" value="Login" name="choose">
         </form>
     </div>
-
+    {% else %}
+    <div class="form" id="register">
+        <h1 class="loginHeader">Register</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="first_name" id="first_name" class="form-input" placeholder=" " required>
+                <label for="first_name" class="form-label">First name:</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="last_name" id="last_name" class="form-input" placeholder=" " required>
+                <label for="last_name" class="form-label">Last name:</label>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" id="email" class="form-input" placeholder=" " required>
+                <label for="email" class="form-label">Email:</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="username" id="username" class="form-input" placeholder=" " required>
+                <label for="username" class="form-label">Username:</label>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" id="password" class="form-input" placeholder=" " required>
+                <label for="password" class="form-label">Password:</label>
+            </div>
+            {% if messages %}
+                <ul class="messages" style="color: red;">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <p>Already have an account? <a href="./">Login here</a></p>
+            <input type="submit" value="Register" name="choose">
+        </form>
+    </div>
+    {% endif %}
 
 </main>
+
+<script>
+
+</script>
 
 {% endblock %}

@@ -13,32 +13,38 @@ schems = [
 
 def loginPage(request):
 
+
     if request.user.is_authenticated:
         return redirect('home')
 
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        
-        try:
-            user = User.objects.get(username=username)
-        except:
-            messages.error(request, 'Username is incorrect')
-            return redirect('login')
+        choose = request.POST.get('choose')
 
-        user = authenticate(request, username=username, password=password)
+        if choose == 'Login':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            
+            try:
+                user = User.objects.get(username=username)
+            except:
+                messages.error(request, 'Username is incorrect')
+                return redirect('login')
 
-        if user is not None:
-            login(request, user)
-            nextPage = request.GET.get('next')
-            if nextPage:
-                return redirect(nextPage)
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                nextPage = request.GET.get('next')
+                if nextPage:
+                    return redirect(nextPage)
+                else:
+                    return redirect('home')
             else:
-                return redirect('home')
-        else:
-            messages.error(request, 'Password is incorrect')
+                messages.error(request, 'Password is incorrect')
+        elif (choose == 'Register'):
+            print('register')
     
-    context = {}
+    context = {'type': request.GET.get('type')}
     return render(request, 'base/login_register.html', context)
 
 
