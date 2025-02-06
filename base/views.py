@@ -4,11 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
-schems = [
-    {'id': 1, 'name': 'Schematic 1'},
-    {'id': 2, 'name': 'Schematic 2'},
-    {'id': 3, 'name': 'Erik er søt'},
-]
+
 
 
 def loginPage(request):
@@ -55,19 +51,19 @@ def logoutUser(request):
 
 # Create your views here.
 def home(request):
-    context = {'schems': schems}
-    return render(request, 'base/home.html', context)
+    return render(request, 'base/home.html')
 
 def schematic(request, pk):
-    schem = None
+    # schem = None
 
-    for i in schems:
-        if i['id'] == int(pk):
-            schem = i
-            break
+    # for i in schems:
+    #     if i['id'] == int(pk):
+    #         schem = i
+    #         break
     
-    context = {'schem': schem}
-    return render(request, 'base/schematic.html', context)
+    # context = {'schem': schem}
+    # return render(request, 'base/schematic.html', context)
+    return render(request, 'base/schematic.html')
 
 @login_required(login_url='login')
 def upload(request):
