@@ -1,12 +1,31 @@
 {% extends 'main.html' %}
 
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+{% endblock %}
+
 {% block content %}
 
 <main class="content">
     <div class="">
-        <h1>Welcome to Vaske App</h1>
-        <p>Here you can create a floor plan of your house and plan your daily cleaning routine.</p>
-        <p>Click on the "Floor plan" link to get started.</p>
+        <div class="parent">
+            <div class="welcome grid">
+                <h1>Welcome to the Home Page</h1>
+                <p>Click on the links below to navigate to the different sections of the website</p>
+            </div>
+            <div class="group grid">
+                <h1>List of groups</h1>
+                <div class="group-list">
+                    {% for group in groups  %}
+                        <a href="{% url 'schematic_group' group.id %}">{{group.name}}</a> <br>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="dailyplan grid">3</div>
+            <div class="inventory grid">4</div>
+        </div>
     </div>
 </main>
 

@@ -3,10 +3,15 @@
 
 {% load static %}
 
-{% block content %}
-<script src="https://cdn.jsdelivr.net/npm/konva@8.3.13/konva.min.js"></script>
 
-<link rel="stylesheet" href="{% static 'styles/upload.css' %}">
+{% block head %}
+  <link rel="stylesheet" href="{% static 'styles/upload.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/konva@8.3.13/konva.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
 
 <main class="content">
   <h2>Floor Plan Editor</h2>

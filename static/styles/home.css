@@ -1,0 +1,37 @@
+.parent {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+}
+
+.grid {
+    width: 45%;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.welcome, .inventory {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.group, .dailyplan {
+    background-color: white;
+    border: 1px solid var(--primary-color);
+    border-radius: 16px;
+}
+
+.welcome { 
+
+}
+.group { 
+
+}
+.dailyplan { 
+
+}
+.inventory { 
+
+}

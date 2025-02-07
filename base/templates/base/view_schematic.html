@@ -1,0 +1,30 @@
+
+{% extends 'main.html' %}
+
+{% load static %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'styles/upload.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/konva@8.3.13/konva.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+
+<main class="content">
+    <h1>Floor Plan Viewer</h1>
+    <h2>{{ name }}</h2>
+    <div id="container"></div>
+</main>
+
+
+<script src="{% static 'js/view_schematic.js' %}"></script>
+
+<script>
+    var schematicData = JSON.parse('{{ schematic_data|escapejs }}'); 
+    importSchematic(schematicData);
+</script>
+
+
+{% endblock %}

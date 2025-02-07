@@ -2,9 +2,12 @@
 
 {% load static %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'styles/login_register.css' %}">
+{% endblock %}
+
 {% block content %}
 
-<link rel="stylesheet" href="{% static 'styles/login_register.css' %}">
 
 
 <main>

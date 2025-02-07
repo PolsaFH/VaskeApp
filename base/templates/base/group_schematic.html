@@ -1,0 +1,21 @@
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'styles/group_schematic.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="content">
+    <div class="schems_list">
+        {% for schem in schems %}
+            <a href="{% url 'schematic' schem.id %}">{{ schem.name }}</a>
+        {% endfor %}
+    </div>
+</main>
+
+
+
+{% endblock %}

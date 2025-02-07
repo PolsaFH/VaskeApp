@@ -6,6 +6,7 @@ urlpatterns = [
     path('logout/', views.logoutUser, name='logout'),
 
     path('', views.home, name='home'),
+    path('schematic/group/<str:pk>/', views.group, name='schematic_group'),
     path('schematic/show/<str:pk>/', views.schematic, name='schematic'),
     path('schematic/upload/', views.upload, name='upload'),
 ]

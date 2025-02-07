@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
+import json
+
+from .models import schematics
 
 
 
@@ -51,19 +54,35 @@ def logoutUser(request):
 
 # Create your views here.
 def home(request):
-    return render(request, 'base/home.html')
+    user = request.user
+    user_group = user.groups.all()
+    context = {'groups': user_group}
+    return render(request, 'base/home.html', context)
+
+def group(request, pk):
+    if(pk):
+        user = request.user
+        user_group = user.groups.get(id=pk)
+        schem = user_group.schematics_set.all()
+
+        context = {'schems': schem}
+
+        return render(request, 'base/group_schematic.html', context)
+    else:
+        return render(request, 'base/home.html')
 
 def schematic(request, pk):
-    # schem = None
+    if(pk):
+        schem = schematics.objects.get(id=pk) # Må endre slik at man kan bare hente fra sine egne grupper
 
-    # for i in schems:
-    #     if i['id'] == int(pk):
-    #         schem = i
-    #         break
-    
-    # context = {'schem': schem}
-    # return render(request, 'base/schematic.html', context)
-    return render(request, 'base/schematic.html')
+        context = {
+            'name': schem.name, 
+            'schematic_data': json.dumps(schem.schematic_json)
+        }
+        return render(request, 'base/view_schematic.html', context)
+    else:
+        return render(request, 'base/home.html')
+
 
 @login_required(login_url='login')
 def upload(request):
