@@ -11,8 +11,6 @@ from .models import schematics
 
 
 def loginPage(request):
-
-
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -46,19 +44,20 @@ def loginPage(request):
     context = {'type': request.GET.get('type')}
     return render(request, 'base/login_register.html', context)
 
-
+@login_required(login_url='login')
 def logoutUser(request):
     logout(request)
     return redirect('home')
 
-
 # Create your views here.
+@login_required(login_url='login')
 def home(request):
     user = request.user
     user_group = user.groups.all()
     context = {'groups': user_group}
     return render(request, 'base/home.html', context)
 
+@login_required(login_url='login')
 def group(request, pk):
     if(pk):
         user = request.user
@@ -71,6 +70,7 @@ def group(request, pk):
     else:
         return render(request, 'base/home.html')
 
+@login_required(login_url='login')
 def schematic(request, pk):
     if(pk):
         schem = schematics.objects.get(id=pk) # Må endre slik at man kan bare hente fra sine egne grupper
