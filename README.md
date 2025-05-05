@@ -13,7 +13,7 @@ TODO:
 
 * [ ] Registerings side, med join link til gruppen
 * [ ] Force login
-* [ ] fjerne navbar om de ikke er logget inn
+* [ ] fjerne navbar om de ikke er logget inn eller ikke valgt gruppe enda
 * [ ] Inserte schematics når man er ferdig
   * [ ] Lage at schematic man starter på er lagra, slik at man ikke trenger å gjøre alt på nytt
 * [ ] Redigere schematics
