@@ -10,4 +10,5 @@ urlpatterns = [
     path('schematic/show/<str:pk>/', views.schematic, name='schematic'),
     path('schematic/upload/', views.upload, name='upload'),
     path('set_active_group/<str:group_id>/', views.set_active_group, name='set_active_group'),
+    path('upload-schematic/', views.upload_schematic, name='upload_schematic'),
 ]

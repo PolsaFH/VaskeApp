@@ -11,7 +11,7 @@
 {% block content %}
 
 <main class="content">
-    <div class="">
+    <div class="container">
         <div class="parent">
             <div class="welcome grid">
                 <h1>Welcome to the Home Page</h1>
@@ -47,15 +47,18 @@
 </main>
 
 <script src="{% static 'js/home.js' %}"></script>
-<script src="{% static 'js/view_schematic.js' %}"></script>
 
+<script type="application/json" id="schematics-data">
+    {{ schems_data|safe }}
+</script>
 
 <script>
-
-    {% for schem in schems %}
-        var schematicData = {{ schem.schematic_json|safe }};
-        importSchematic(schematicData);
-    {% endfor %}
+    const schems = JSON.parse(document.getElementById('schematics-data').textContent);
+    schems.forEach((schematicData, index) => {
+        if (index === 1) {
+            importSchematic(schematicData);
+        }
+    });
 </script>
 
 

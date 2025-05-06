@@ -93,3 +93,21 @@ def schematic(request, pk):
 @login_required(login_url='login')
 def upload(request):
     return render(request, 'base/upload.html')
+
+
+@login_required(login_url='login')
+def upload_schematic(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  # Parse JSON data
+            schematic_name = data.get('schematic_name')
+            schematic_json = data.get('schematic_json')
+            group_id = request.session.get('active_group_id')
+
+            schem = schematics.objects.create(name=schematic_name, schematic_json=schematic_json, group_id=group_id)
+            schem.save()
+
+            return redirect('schematic_group', group_id)
+        except json.JSONDecodeError:
+            print("Invalid JSON data")
+            return redirect('upload')

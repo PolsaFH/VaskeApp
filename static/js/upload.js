@@ -379,14 +379,16 @@ function sendSchematic() {
             'X-CSRFToken': getCSRFToken(), // Include CSRF token for Django
         },
         body: JSON.stringify({
-            name: schematicName,
-            data: JSON.parse(schematicData),
+            "schematic_name": schematicName,
+            "schematic_json": JSON.parse(schematicData),
         }),
     })
     .then(response => {
         if (response.ok) {
             alert("Schematic sent successfully!");
             sessionStorage.removeItem('schematicData'); // Clear session storage after sending
+            window.location.href = response.url;
+
         } else {
             alert("Failed to send schematic.");
         }
@@ -396,6 +398,7 @@ function sendSchematic() {
         alert("An error occurred while sending the schematic.");
     });
 }
+
 
 // Helper function to get CSRF token from cookies
 function getCSRFToken() {

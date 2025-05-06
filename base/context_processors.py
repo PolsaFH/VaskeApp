@@ -1,10 +1,11 @@
+import json
 from django.contrib.auth.models import Group
 
 def active_group_context(request):
     active_group_id = request.session.get('active_group_id')
     active_group_name = None
     user_groups = []
-    schem = []
+    schems_data = []
 
     if request.user.is_authenticated:
         user_groups = request.user.groups.all()
@@ -16,15 +17,24 @@ def active_group_context(request):
 
                 user = request.user
                 user_group = user.groups.get(id=active_group_id)
-                schem = user_group.schematics_set.all()
+                schems = user_group.schematics_set.all()
 
-                
+                schems_data = [
+                    {
+                        "name": schem.name,
+                        "id": schem.id,
+                        "schematic_json": schem.schematic_json,
+                    }
+                    for schem in schems
+                ]
+
             except Group.DoesNotExist:
                 active_group_name = None
 
     return {
-        'schems': schem,
-        'active_group_id': active_group_id,
-        'active_group_name': active_group_name,
-        'user_groups': user_groups,
+        "schems": schems if schems_data else [],
+        "schems_data": json.dumps(schems_data) if schems_data else [],
+        "active_group_id": active_group_id if active_group_id else None,
+        "active_group_name": active_group_name if active_group_name else None,
+        "user_groups": user_groups if user_groups else [],
     }

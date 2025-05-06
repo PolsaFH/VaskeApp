@@ -14,7 +14,9 @@
     {% endblock %}
 </head>
 <body>
-    {% include 'navbar.html' %}
+    {% if user.is_authenticated %}
+        {% include 'navbar.html' %}
+    {% endif %}
 
     {% block content %}
 

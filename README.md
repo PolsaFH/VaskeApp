@@ -29,5 +29,6 @@ TODO:
 * [ ] Finne ut hva Setting skal inne holde
 * [ ] lage member side så man kan se hvem er i gruppen, sende melding, og aktive brukere
 * [ ] legge til at en dør har standar størrelse (liten - 60,cm, medium - 1m, large - 1,8m)
-* [ ] legge til soner når et rom blir etablert
+* [X] legge til soner når et rom blir etablert
 * [ ] Fikse slik at tekst på sone også forsvinner
+* [ ] Fikse at home schem visning er bare schem med daily plan
