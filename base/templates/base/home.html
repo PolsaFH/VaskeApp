@@ -13,7 +13,9 @@
         <div class="parent">
             <div class="welcome grid">
                 <h1>Welcome to the Home Page</h1>
-                <p>Click on the links below to navigate to the different sections of the website</p>
+                <p>"Daily plan" are made automatically based on your preferences, to get your plan you must first make your schematic: Navigate the navbar and click make schematic. </p>
+            
+                </p>
             </div>
             <div class="group grid">
                 <h1>List of groups</h1>
@@ -25,10 +27,21 @@
             </div>
             <div class="dailyplan grid">
                 <h1>Daily plan</h1>
+                <div class="dailyplan-list">
+                    {% for plan in plans %}
+                        <a href="{% url 'daily_plan' plan.id %}">{{ plan.name }}</a> <br>
+                    {% endfor %}
             </div>
-            <div class="inventory grid">
-                <h1>Equipment</h1>
+
+            <div class="schematic grid">
+                <h1>Your floor</h1>
+                <div class="schematic-list">
+                    {% for schem in schems %}
+                        <a href="{% url 'schematic' schem.id %}">{{ schem.name }}</a> <br>
+                    {% endfor %}
+                </div>
             </div>
+
         </div>
     </div>
 </main>
