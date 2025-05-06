@@ -27,6 +27,10 @@
             </div>
             <div class="dailyplan grid">
                 <h1>Daily plan</h1>
+                <div class="dailyplan-list">
+                    {% for plan in plans %}
+                        <a href="{% url 'daily_plan' plan.id %}">{{ plan.name }}</a> <br>
+                    {% endfor %}
             </div>
 
             <div class="schematic grid">
