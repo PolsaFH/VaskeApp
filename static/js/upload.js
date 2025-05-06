@@ -15,6 +15,14 @@ const stage = new Konva.Stage({
 const layer = new Konva.Layer();
 stage.add(layer);
 
+let zoneColors = {};
+
+function getRandomColor() {
+    const random1 = Math.floor(Math.random() * 256); // Random value between 0-255
+    const random2 = Math.floor(Math.random() * 256);
+    const random3 = Math.floor(Math.random() * 256);
+    return `rgb(${random1}, ${random2}, ${random3})`;
+}
 
 function addElement(type, options) {
     
@@ -26,8 +34,10 @@ function addElement(type, options) {
         fill: options.fill || 'gray',
         draggable: true,
         rotation: options.rotation || 0,
-        name: type,
+        type: type,
+        name: options.name || type, // Use the name from options or default to type
     });
+
 
     if (type === "Door") {
         item.moveToTop();
@@ -36,8 +46,11 @@ function addElement(type, options) {
     item.on('click', () => {
         let tr = new Konva.Transformer({
             nodes: [item],
-            enabledAnchors: ['middle-left', 'middle-right'],
+            enabledAnchors: [
+                'middle-left', 'middle-right', 'top-center', 'bottom-center' // Midtsider
+            ],
             boundBoxFunc: (oldBox, newBox) => {
+                // Forhindre at sonen blir for liten
                 if (newBox.width < 10 || newBox.height < 10) {
                     return oldBox;
                 }
@@ -49,7 +62,7 @@ function addElement(type, options) {
         item.draggable(true);
         layer.draw();
 
-        // Remove transformer and disable dragging when clicking outside
+        // Fjern transformatoren når brukeren klikker utenfor
         stage.on('click', (e) => {
             if (e.target !== item) {
                 tr.destroy();
@@ -58,11 +71,7 @@ function addElement(type, options) {
             }
         });
 
-        if (type === 'Door') {
-            item.moveToTop();
-        }
-
-        // Add delete button
+        // Legg til slett-knapp
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.style.position = 'absolute';
@@ -73,8 +82,8 @@ function addElement(type, options) {
         deleteButton.addEventListener('click', () => {
             item.destroy();
             tr.destroy();
-            layer.draw();
             deleteButton.remove();
+            layer.draw();
             updateOutput();
         });
 
@@ -83,16 +92,13 @@ function addElement(type, options) {
                 deleteButton.remove();
             }
         });
-
-        document.getElementById('width').textContent = item.width()/100;
-
-
     });
 
     // Update JSON when dragging
     item.on('dragmove', () => {
         item.x(Math.round(item.x() / gridSize) * gridSize);
         item.y(Math.round(item.y() / gridSize) * gridSize);
+
         updateOutput();
     });
 
@@ -145,6 +151,37 @@ function addElement(type, options) {
         rotation: item.rotation()
     });
 
+    if (type === "Zone") {
+        // Add the zone name text
+        const zoneText = new Konva.Text({
+            x: item.x(),
+            y: item.y(),
+            text: options.name,
+            fontSize: 16,
+            fontFamily: 'Arial',
+            fill: 'black',
+            align: 'center',
+            verticalAlign: 'middle',
+            width: item.width(),
+            height: item.height(),
+            listening: false // Make the text non-interactive
+        });
+        zoneText.x(item.x() + (item.width() - zoneText.width()) / 2);
+        zoneText.y(item.y() + (item.height() - zoneText.height()) / 2);
+
+        item.on('dragmove', () => {
+            zoneText.x(item.x() + (item.width() - zoneText.width()) / 2);
+            zoneText.y(item.y() + (item.height() - zoneText.height()) / 2);
+        });
+        item.on('transform', () => {
+            zoneText.width(item.width());
+            zoneText.height(item.height());
+            zoneText.x(item.x() + (item.width() - zoneText.width()) / 2);
+            zoneText.y(item.y() + (item.height() - zoneText.height()) / 2);
+        });
+        layer.add(zoneText);
+    }
+
     layer.draw();
     updateOutput();
 
@@ -172,6 +209,28 @@ function addWall() {
     addElement('Wall', { width: 200, height: 10, fill: 'black' });
 }
 
+function addZone() {
+    const zoneName = prompt("Enter a name for the zone:");
+    if (!zoneName) {
+        alert("Zone name is required.");
+        return;
+    }
+
+    // Assign a random color to the zone name if it doesn't already have one
+    if (!zoneColors[zoneName]) {
+        zoneColors[zoneName] = getRandomColor();
+        sessionStorage.setItem('zoneColors', JSON.stringify(zoneColors)); // Save to sessionStorage
+    }
+
+    // Add the zone with the assigned color
+    addElement('Zone', {
+        width: 100, // Default width
+        height: 100, // Default height
+        fill: zoneColors[zoneName], // Use the assigned color
+        name: zoneName // Store the zone name
+    });
+}
+
 function clearCanvas() {
     layer.destroyChildren();
     elements = [];
@@ -184,14 +243,15 @@ function clearCanvas() {
 
 function updateOutput() {
     elements = layer.children.filter(item => item.className === 'Rect').map(item => ({
-        type: item.attrs.fill === 'black' ? 'Wall' : item.attrs.fill === 'brown' ? 'Door' : 'Furniture',
+        type: item.attrs.type,
+        name: item.attrs.type === 'Zone' ? item.attrs.name : undefined, // Include the zone name if it's a zone
         x: Math.round(item.x()),
         y: Math.round(item.y()),
-        width: item.width(), // Ensure correct width after transform
+        width: item.width(),
         height: item.height(),
         rotation: item.rotation()
     }));
-    // document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
+    document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
     sessionStorage.setItem('schematicData', JSON.stringify(elements));
 }
 
@@ -257,6 +317,9 @@ function showSchematicEditor() {
         alert("Please enter a name for the schematic.");
         return;
     }
+
+    sessionStorage.setItem('schematicName', document.getElementById('schematic-name-input').value);
+
     document.getElementById('schematic-name').style.display = 'none';
     document.getElementById('schematic-editor').style.display = 'block';
 }
@@ -265,21 +328,34 @@ function showSchematicEditor() {
 window.onload = () => {
     const savedData = sessionStorage.getItem('schematicData');
     if (savedData) {
+        const savedZoneColors = sessionStorage.getItem('zoneColors');
         try {
             const parsedData = JSON.parse(savedData);
+            zoneColors = savedZoneColors ? JSON.parse(savedZoneColors) : {};
             parsedData.forEach(item => {
                 addElement(item.type, {
                     x: item.x,
                     y: item.y,
                     width: item.width,
                     height: item.height,
-                    fill: item.type === 'Wall' ? 'black' : item.type === 'Door' ? 'brown' : 'blue',
+                    fill: item.type === 'Wall' ? 'black' : item.type === 'Door' ? 'brown' : item.type === 'Zone' ? zoneColors[item.name] : 'blue',
+                    name: item.type === 'Zone' ? item.name : undefined, // Include the zone name if it's a zone
                     rotation: item.rotation
                 });
             });
         } catch (error) {
             console.error("Failed to load schematic data:", error);
         }
+    }
+
+    const schematicName = sessionStorage.getItem('schematicName');
+    if (schematicName) {
+        document.getElementById('schematic-name-input').value = schematicName;
+        document.getElementById('schematic-name').style.display = 'none';
+        document.getElementById('schematic-editor').style.display = 'block';
+    } else {
+        document.getElementById('schematic-name').style.display = 'block';
+        document.getElementById('schematic-editor').style.display = 'none';
     }
 };
 
