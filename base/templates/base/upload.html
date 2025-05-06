@@ -15,15 +15,21 @@
 
 <main class="content">
   <h2>Floor Plan Editor</h2>
-  <div class="button-container">
+  <div id="schematic-name">
+    <input type="text" id="schematic-name-input" placeholder="Enter schematic name" required>
+    <input type="button" value="Neste" id="next-button" onclick="showSchematicEditor()">
+  </div>
+  <div id="schematic-editor" style="display: none;">
+    <div class="button-container">
       <button onclick="addWall()">Add Wall</button>
       <button onclick="addDoor()">Add Door</button>
       <button onclick="clearCanvas()">Clear</button>
       <button onclick="importSchematic()">Import</button>
+      <button onclick="sendSchematic()">Send</button>
       <p>Width: <span id="width"></span>m</p>
+    </div>
+    <div id="container"></div>
   </div>
-  <div id="container"></div>
-  <div id="output"></div>
 </main>
 
 <script src="{% static 'js/upload.js' %}"></script>

@@ -11,7 +11,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* padding: 0 20px; */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
@@ -37,6 +36,20 @@
     margin: 0;
     text-align: center;
     width: 100%;
+}
+
+.notification {
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+}
+
+.notification-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .logo a {
@@ -141,5 +154,7 @@
 .bottom-links a:hover {
     background-color: var(--secondary-color);
 }
+
+
 
 

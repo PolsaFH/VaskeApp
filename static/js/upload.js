@@ -177,6 +177,9 @@ function clearCanvas() {
     elements = [];
     layer.draw();
     updateOutput();
+
+    // Fjern data fra sessionStorage
+    sessionStorage.removeItem('schematicData');
 }
 
 function updateOutput() {
@@ -188,7 +191,8 @@ function updateOutput() {
         height: item.height(),
         rotation: item.rotation()
     }));
-    document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
+    // document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
+    sessionStorage.setItem('schematicData', JSON.stringify(elements));
 }
 
 function exportSchematic() {
@@ -247,3 +251,84 @@ stage.on("wheel", (e) => {
     stage.position(newPos);
 
 });
+
+function showSchematicEditor() {
+    if (document.getElementById('schematic-name-input').value === "") {
+        alert("Please enter a name for the schematic.");
+        return;
+    }
+    document.getElementById('schematic-name').style.display = 'none';
+    document.getElementById('schematic-editor').style.display = 'block';
+}
+
+// Gjenopprett lagrede data fra sessionStorage
+window.onload = () => {
+    const savedData = sessionStorage.getItem('schematicData');
+    if (savedData) {
+        try {
+            const parsedData = JSON.parse(savedData);
+            parsedData.forEach(item => {
+                addElement(item.type, {
+                    x: item.x,
+                    y: item.y,
+                    width: item.width,
+                    height: item.height,
+                    fill: item.type === 'Wall' ? 'black' : item.type === 'Door' ? 'brown' : 'blue',
+                    rotation: item.rotation
+                });
+            });
+        } catch (error) {
+            console.error("Failed to load schematic data:", error);
+        }
+    }
+};
+
+function sendSchematic() {
+    const schematicName = document.getElementById('schematic-name-input').value;
+    if (!schematicName) {
+        alert("Please enter a name for the schematic before sending.");
+        return;
+    }
+
+    const schematicData = sessionStorage.getItem('schematicData');
+    if (!schematicData) {
+        alert("No schematic data to send.");
+        return;
+    }
+
+    fetch('/upload-schematic/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCSRFToken(), // Include CSRF token for Django
+        },
+        body: JSON.stringify({
+            name: schematicName,
+            data: JSON.parse(schematicData),
+        }),
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Schematic sent successfully!");
+            sessionStorage.removeItem('schematicData'); // Clear session storage after sending
+        } else {
+            alert("Failed to send schematic.");
+        }
+    })
+    .catch(error => {
+        console.error("Error sending schematic:", error);
+        alert("An error occurred while sending the schematic.");
+    });
+}
+
+// Helper function to get CSRF token from cookies
+function getCSRFToken() {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'csrftoken') {
+            return value;
+        }
+    }
+    return null;
+}

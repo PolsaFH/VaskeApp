@@ -19,12 +19,16 @@
                 <h1>List of groups</h1>
                 <div class="group-list">
                     {% for group in groups  %}
-                        <a href="{% url 'schematic_group' group.id %}">{{group.name}}</a> <br>
+                        <a href="{% url 'set_active_group' group.id %}">{{group.name}}</a> <br>
                     {% endfor %}
                 </div>
             </div>
-            <div class="dailyplan grid">3</div>
-            <div class="inventory grid">4</div>
+            <div class="dailyplan grid">
+                <h1>Daily plan</h1>
+            </div>
+            <div class="inventory grid">
+                <h1>Equipment</h1>
+            </div>
         </div>
     </div>
 </main>

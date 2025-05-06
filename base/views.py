@@ -57,6 +57,12 @@ def home(request):
     context = {'groups': user_group}
     return render(request, 'base/home.html', context)
 
+
+@login_required(login_url='login')
+def set_active_group(request, group_id):
+    request.session['active_group_id'] = group_id
+    return redirect('schematic_group', group_id)  # Eller hvor du vil sende brukeren videre
+
 @login_required(login_url='login')
 def group(request, pk):
     if(pk):
