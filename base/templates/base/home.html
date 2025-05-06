@@ -3,7 +3,9 @@
 {% load static %}
 
 {% block head %}
+    <link rel="stylesheet" href="{% static 'styles/upload.css' %}">
     <link rel="stylesheet" href="{% static 'styles/home.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/konva@8.3.13/konva.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,8 +16,6 @@
             <div class="welcome grid">
                 <h1>Welcome to the Home Page</h1>
                 <p>"Daily plan" are made automatically based on your preferences, to get your plan you must first make your schematic: Navigate the navbar and click make schematic. </p>
-            
-                </p>
             </div>
             <div class="group grid">
                 <h1>List of groups</h1>
@@ -31,19 +31,32 @@
                     {% for plan in plans %}
                         <a href="{% url 'daily_plan' plan.id %}">{{ plan.name }}</a> <br>
                     {% endfor %}
+                </div>
             </div>
 
             <div class="schematic grid">
                 <h1>Your floor</h1>
                 <div class="schematic-list">
                     {% for schem in schems %}
-                        <a href="{% url 'schematic' schem.id %}">{{ schem.name }}</a> <br>
+                        <div id="container" style="background-color: white;"></div>
                     {% endfor %}
                 </div>
             </div>
-
         </div>
     </div>
 </main>
+
+<script src="{% static 'js/home.js' %}"></script>
+<script src="{% static 'js/view_schematic.js' %}"></script>
+
+
+<script>
+
+    {% for schem in schems %}
+        var schematicData = {{ schem.schematic_json|safe }};
+        importSchematic(schematicData);
+    {% endfor %}
+</script>
+
 
 {% endblock %}

@@ -188,7 +188,7 @@ function addElement(type, options) {
 }
 
 function addDoor() {
-    addElement('Door', { width: 40, height: 10, fill: 'brown' });
+    addElement('Door', { width: 100, height: 10, fill: 'brown' });
 }
 
 function startAddingDoor() {

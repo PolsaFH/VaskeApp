@@ -12,7 +12,7 @@
     padding: 20px;
 }
 
-.welcome, .inventory {
+.welcome, .schematic {
     background-color: var(--primary-color);
     color: white;
 }
@@ -32,6 +32,6 @@
 .dailyplan { 
 
 }
-.inventory { 
+.schematic { 
 
 }

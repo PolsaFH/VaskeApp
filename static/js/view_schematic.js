@@ -1,11 +1,9 @@
-const width = 800;
-const height = 800;
 const gridSize = 10;
 
 const stage = new Konva.Stage({
     container: 'container',
-    width: window.innerWidth * 0.8,
-    height: window.innerHeight * 0.8,
+    width: 300,
+    height: 300,
     draggable: true
 });
 

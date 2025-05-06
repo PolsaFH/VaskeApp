@@ -45,8 +45,7 @@
 }
 
 .notification-icon {
-    width: 32px;
-    height: 32px;
+    font-size: 32px;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -17,6 +17,7 @@ def active_group_context(request):
                 user = request.user
                 user_group = user.groups.get(id=active_group_id)
                 schem = user_group.schematics_set.all()
+
                 
             except Group.DoesNotExist:
                 active_group_name = None
