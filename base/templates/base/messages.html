@@ -1,0 +1,29 @@
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'styles/messages.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="content">
+    <div class="messages-container">
+        <div class="group-members">
+            <h2>{{ group }}</h2>
+            <div class="member-list">
+                {% for member in members %}
+                    <div class="member">
+                        <h3>{{ member.first_name }} {{ member.last_name }}</h3>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="messages-group">
+            
+        </div>
+    </div>
+</main>
+
+{% endblock %}

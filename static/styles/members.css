@@ -1,0 +1,55 @@
+.content{
+    padding: 0;
+    padding-top: 20px;
+}
+
+.member-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.member {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    max-width: 350px;
+    width: 80%;
+}
+
+.names {
+    flex-grow: 1; 
+    margin-right: 10px; 
+}
+
+.messagebtn, .remove {
+    width: 60px;
+    text-align: center;
+}
+
+/* .messagebtn {
+
+} */
+
+.messagebtn a {
+    text-decoration: none;
+    color: inherit;
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+.header {
+    text-align: center;
+}
+
+.remove-button {
+    background-color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}

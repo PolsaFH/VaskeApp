@@ -1,0 +1,29 @@
+.content {
+    padding: 0;
+}
+
+.messages-container {
+    display: grid;
+    grid-template-columns: 3fr 7fr;
+    height: 100vh;
+    max-height: calc(100vh - 60px);
+}
+
+.messages-group {
+    background-color: var(--light-light-color);
+    overflow-y: scroll;
+}
+
+.group-members {
+    overflow-y: scroll;
+}
+
+.group-members h2 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.member {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}

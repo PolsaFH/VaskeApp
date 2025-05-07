@@ -37,10 +37,13 @@
             <div class="schematic grid">
                 <h1>Your floor</h1>
                 <div class="schematic-list">
-                    {% for schem in schems %}
-                        <div id="container" style="background-color: white;"></div>
-                    {% endfor %}
+                    <select id="select" onchange="changeSchemInPage(this.value)">
+                        {% for schem in schems %}
+                            <option value="{{ schem.id }}">{{ schem.name }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
+                <div id="container" style="background-color: white;"></div>
             </div>
         </div>
     </div>
@@ -55,7 +58,7 @@
 <script>
     const schems = JSON.parse(document.getElementById('schematics-data').textContent);
     schems.forEach((schematicData, index) => {
-        if (index === 1) {
+        if (index === 0) {
             importSchematic(schematicData);
         }
     });

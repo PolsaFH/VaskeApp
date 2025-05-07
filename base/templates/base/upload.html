@@ -14,23 +14,32 @@
 
 
 <main class="content text-center">
-  <h2>Floor Plan Editor</h2>
+  <h1>Floor Plan Editor</h1>
   <div id="schematic-name">
     <input type="text" id="schematic-name-input" placeholder="Enter schematic name" required>
     <input type="button" value="Neste" id="next-button" onclick="showSchematicEditor()">
   </div>
   <div id="schematic-editor" style="display: none;">
     <div class="button-container">
-      <button onclick="addWall()">Add Wall</button>
-      <button onclick="addDoor()">Add Door</button>
-      <button onclick="addZone()">Legg til sone</button>
-      <button onclick="clearCanvas()">Clear</button>
-      <button onclick="importSchematic()">Import</button>
-      <button onclick="sendSchematic()">Send</button>
-      <p>Width: <span id="width"></span>m</p>
+      <button onclick="restartMaker()" class="restart button-top">Restart</button>
+      <button onclick="sendSchematic()" class="submit button-top">Submit</button>
     </div>
-    <div id="container"></div>
-    <div id="output"></div>
+    <div class="maker-view">
+      <div class="width-container">
+        <p class="width-text">Width: <span id="width"></span>m</p>
+      </div>
+      <div id="container"></div>
+      <div class="maker-buttons-container">
+        <button onclick="toggleMakerButtons()" id="maker-menu-button"><i class="fa-solid fa-caret-down"></i></button>
+        <div class="maker-buttons" id="maker-buttons">
+          <button onclick="addWall()">Add Wall</button>
+          <button onclick="addDoor()">Add Door</button>
+          <button onclick="addZone()">Add Zone</button>
+          <button onclick="clearCanvas()">Clear</button>
+        </div>
+      </div>
+    </div>
+    <!-- <div id="output"></div> -->
   </div>
 </main>
 

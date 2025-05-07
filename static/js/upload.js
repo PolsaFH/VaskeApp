@@ -74,10 +74,7 @@ function addElement(type, options) {
         // Legg til slett-knapp
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
-        deleteButton.style.position = 'absolute';
-        deleteButton.style.top = `${stage.container().offsetTop}px`;
-        deleteButton.style.left = `${stage.container().offsetLeft + stage.width() + 20}px`;
-        document.body.appendChild(deleteButton);
+        document.getElementById("maker-buttons").appendChild(deleteButton);
 
         deleteButton.addEventListener('click', () => {
             item.destroy();
@@ -219,7 +216,7 @@ function addZone() {
     // Assign a random color to the zone name if it doesn't already have one
     if (!zoneColors[zoneName]) {
         zoneColors[zoneName] = getRandomColor();
-        sessionStorage.setItem('zoneColors', JSON.stringify(zoneColors)); // Save to sessionStorage
+        localStorage.setItem('zoneColors', JSON.stringify(zoneColors)); // Save to localStorage
     }
 
     // Add the zone with the assigned color
@@ -237,8 +234,8 @@ function clearCanvas() {
     layer.draw();
     updateOutput();
 
-    // Fjern data fra sessionStorage
-    sessionStorage.removeItem('schematicData');
+    // Fjern data fra localStorage
+    localStorage.removeItem('schematicData');
 }
 
 function updateOutput() {
@@ -251,8 +248,8 @@ function updateOutput() {
         height: item.height(),
         rotation: item.rotation()
     }));
-    document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
-    sessionStorage.setItem('schematicData', JSON.stringify(elements));
+    // document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
+    localStorage.setItem('schematicData', JSON.stringify(elements));
 }
 
 function exportSchematic() {
@@ -318,17 +315,17 @@ function showSchematicEditor() {
         return;
     }
 
-    sessionStorage.setItem('schematicName', document.getElementById('schematic-name-input').value);
+    localStorage.setItem('schematicName', document.getElementById('schematic-name-input').value);
 
     document.getElementById('schematic-name').style.display = 'none';
     document.getElementById('schematic-editor').style.display = 'block';
 }
 
-// Gjenopprett lagrede data fra sessionStorage
+// Gjenopprett lagrede data fra localStorage
 window.onload = () => {
-    const savedData = sessionStorage.getItem('schematicData');
+    const savedData = localStorage.getItem('schematicData');
     if (savedData) {
-        const savedZoneColors = sessionStorage.getItem('zoneColors');
+        const savedZoneColors = localStorage.getItem('zoneColors');
         try {
             const parsedData = JSON.parse(savedData);
             zoneColors = savedZoneColors ? JSON.parse(savedZoneColors) : {};
@@ -348,7 +345,7 @@ window.onload = () => {
         }
     }
 
-    const schematicName = sessionStorage.getItem('schematicName');
+    const schematicName = localStorage.getItem('schematicName');
     if (schematicName) {
         document.getElementById('schematic-name-input').value = schematicName;
         document.getElementById('schematic-name').style.display = 'none';
@@ -366,7 +363,7 @@ function sendSchematic() {
         return;
     }
 
-    const schematicData = sessionStorage.getItem('schematicData');
+    const schematicData = localStorage.getItem('schematicData');
     if (!schematicData) {
         alert("No schematic data to send.");
         return;
@@ -386,7 +383,8 @@ function sendSchematic() {
     .then(response => {
         if (response.ok) {
             alert("Schematic sent successfully!");
-            sessionStorage.removeItem('schematicData'); // Clear session storage after sending
+            localStorage.removeItem('schematicData');
+            localStorage.removeItem('schematicName');
             window.location.href = response.url;
 
         } else {
@@ -410,4 +408,25 @@ function getCSRFToken() {
         }
     }
     return null;
+}
+
+
+function toggleMakerButtons() {
+    const makerButtons = document.querySelector('.maker-buttons');
+    makerButtons.classList.toggle('open');
+    const MakerMenu = document.getElementById("maker-menu-button");
+    if (makerButtons.classList.contains('open')) {
+        MakerMenu.style.transform = "rotate(0deg)";
+    } else {
+        MakerMenu.style.transform = "rotate(-90deg)";
+    }
+}
+
+function restartMaker() {
+    clearCanvas();
+    localStorage.removeItem('schematicData');
+    localStorage.removeItem('schematicName');
+    document.getElementById('schematic-name').style.display = 'block';
+    document.getElementById('schematic-editor').style.display = 'none';
+    document.getElementById('schematic-name-input').value = "";
 }

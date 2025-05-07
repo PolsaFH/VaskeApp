@@ -12,6 +12,7 @@ body {
     --primary-color: #315EB0;
     --secondary-color: #5278BE;
     --light-color: #adcaff;
+    --light-light-color: #e6ecff;
     --common-color: white;
     --normal-font-size: 1rem;
     --medium-font-size: 1.25rem;
@@ -28,4 +29,36 @@ body {
 
 .content.shifted {
     transform: translateX(250px); /* Shift content when navbar is open */
+}
+
+
+.messages {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+}
+
+.message.success {
+    background-color: #4CAF50; 
+}
+
+.message.error {
+    background-color: #f44336;
+}
+
+.message.info {
+    background-color: #2196F3;
+}
+
+.message.warning {
+    background-color: #ff9800; 
 }

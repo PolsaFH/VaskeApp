@@ -8,19 +8,25 @@ open file
 
 python3 manage.py runserver
 
+Elias TODO:
+
+* [ ] Legg til iconer for knappene i make shcematic.
+
 TODO:
 
 * [ ] Registerings side, med join link til gruppen
 * [ ] Force login
 * [X] fjerne navbar om de ikke er logget inn eller ikke valgt gruppe enda
-* [ ] Inserte schematics når man er ferdig
+* [X] Inserte schematics når man er ferdig
   * [X] Lage at schematic man starter på er lagra, slik at man ikke trenger å gjøre alt på nytt
-  * [ ] Lage upload-schematic api for å lagre schematicen
-  * [ ] tenke på om jeg heller skal bruke localstorage, så kan den evt cleare alt om den skal starte på en ny
+  * [X] Lage upload-schematic api for å lagre schematicen
+  * [X] tenke på om jeg heller skal bruke localstorage, så kan den evt cleare alt om den skal starte på en ny
 * [ ] Redigere schematics
-* [ ] Add Schematic to group
+* [X] Add Schematic to group
 * [X] Hovre over floorplan navbar så skal alle schematics i gruppa komme opp
-* [ ] Lage firkanter i rom (status)
+* [X] Lage firkanter i rom (status)
+  * [ ] lage dato sist vasket
+  * [ ] og hva som ble vasket
 * [ ] implementere legge opp bilde
 * [ ] Equipment side
 * [ ] daily plan side
@@ -32,3 +38,6 @@ TODO:
 * [X] legge til soner når et rom blir etablert
 * [ ] Fikse slik at tekst på sone også forsvinner
 * [ ] Fikse at home schem visning er bare schem med daily plan
+* [ ] Sjekke om messages funker
+* [ ] lage notification side (aksepter gruppe inv)
+* [ ] fikse slik at bare gruppe leder kan fjerne brukere fra gruppa

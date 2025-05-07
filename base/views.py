@@ -7,9 +7,6 @@ import json
 
 from .models import schematics
 
-
-
-
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -39,7 +36,16 @@ def loginPage(request):
             else:
                 messages.error(request, 'Password is incorrect')
         elif (choose == 'Register'):
-            print('register')
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            email = request.POST.get('email')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+
+            user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+            user.save()
+            messages.success(request, 'User created successfully!')
+            return redirect('login')
     
     context = {'type': request.GET.get('type')}
     return render(request, 'base/login_register.html', context)
@@ -60,8 +66,14 @@ def home(request):
 
 @login_required(login_url='login')
 def set_active_group(request, group_id):
-    request.session['active_group_id'] = group_id
-    return redirect('schematic_group', group_id)  # Eller hvor du vil sende brukeren videre
+    try:
+        group = Group.objects.get(id=group_id)
+        request.session['active_group_id'] = group.id
+    except Group.DoesNotExist:
+        messages.error(request, 'Group does not exist.')
+
+    return redirect('home')
+
 
 @login_required(login_url='login')
 def group(request, pk):
@@ -79,7 +91,7 @@ def group(request, pk):
 @login_required(login_url='login')
 def schematic(request, pk):
     if(pk):
-        schem = schematics.objects.get(id=pk) # Må endre slik at man kan bare hente fra sine egne grupper
+        schem = schematics.objects.get(id=pk)
 
         context = {
             'name': schem.name, 
@@ -111,3 +123,48 @@ def upload_schematic(request):
         except json.JSONDecodeError:
             print("Invalid JSON data")
             return redirect('upload')
+        
+
+
+@login_required(login_url='login')
+def members(request):
+    group_id = request.session.get('active_group_id')
+
+    if group_id:
+        group = Group.objects.get(id=group_id)
+        members = group.user_set.all()
+        context = {'members': members, 'group': group}
+    else:
+        redirect('home')
+    
+    return render(request, 'base/members.html', context)
+
+
+@login_required(login_url='login')
+def remove_member(request, group_id, member_id):
+    if request.method == 'POST':
+        try:
+            user = User.objects.get(id=member_id)
+            group = Group.objects.get(id=group_id)
+
+            group.user_set.remove(user)
+            messages.success(request, f'{user.first_name} has been removed from the group.')
+        except User.DoesNotExist:
+            messages.error(request, 'User does not exist.')
+        except Group.DoesNotExist:
+            messages.error(request, 'Group does not exist.')
+
+    return redirect('members')
+
+
+@login_required(login_url='login')
+def messagesPage(request):
+    group_id = request.session.get('active_group_id')
+
+    if group_id:
+        group = Group.objects.get(id=group_id)
+        members = group.user_set.all()
+        context = {'members': members, 'group': group}
+    else:
+        redirect('home')
+    return render(request, 'base/messages.html', context)

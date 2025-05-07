@@ -91,3 +91,15 @@ stage.on("wheel", (e) => {
 
     stage.position(newPos);
 });
+
+
+function changeSchemInPage(id) {
+    const schem = schems.find(s => s.id == id);
+    if (schem) {
+        // Clear the layer before importing a new schematic
+        layer.destroyChildren();
+        importSchematic(schem);
+    } else {
+        console.error('Schematic not found:', id);
+    }
+}
