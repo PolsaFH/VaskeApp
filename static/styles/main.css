@@ -32,14 +32,14 @@ body {
 }
 
 
-.messages {
+.messages-server {
     position: fixed;
     top: 10px;
     right: 10px;
     z-index: 1000;
 }
 
-.message {
+.message-server {
     margin-bottom: 10px;
     padding: 10px 15px;
     border-radius: 5px;
@@ -47,18 +47,18 @@ body {
     font-size: 14px;
 }
 
-.message.success {
+.message-server.success {
     background-color: #4CAF50; 
 }
 
-.message.error {
+.message-server.error {
     background-color: #f44336;
 }
 
-.message.info {
+.message-server.info {
     background-color: #2196F3;
 }
 
-.message.warning {
+.message-server.warning {
     background-color: #ff9800; 
 }

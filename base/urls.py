@@ -16,4 +16,6 @@ urlpatterns = [
     path('members/remove/<int:group_id>/<int:member_id>', views.remove_member, name='remove_member'),
 
     path('messages/', views.messagesPage, name='messages'),
+    path('messages/get_messages/<int:member_id>/', views.get_messages, name='get_messages'),
+    path('messages/send_message/', views.send_message, name='send_message'),
 ]

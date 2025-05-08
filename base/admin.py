@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import schematics
+from .models import messages
 from django.forms import Textarea
 from django.db import models
 
@@ -13,5 +14,17 @@ class SchematicAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.JSONField: {"widget": admin.widgets.AdminTextareaWidget},  # Makes JSONField more readable
     }
+
+
+@admin.register(messages)
+class MessagesAdmin(admin.ModelAdmin):
+    list_display = ("sender", "recipient", "timestamp")
+    search_fields = ("sender__username", "receiver__username")
+    list_filter = ("timestamp",)
+    ordering = ("-timestamp",)
+    formfield_overrides = {
+        models.TextField: {"widget": Textarea(attrs={"rows": 4, "cols": 40})},  # Makes TextField more readable
+    }
+
 
 

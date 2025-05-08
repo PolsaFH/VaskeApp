@@ -4,8 +4,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 import json
+from django.http import JsonResponse
 
-from .models import schematics
+from .models import schematics, messages as member_messages
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -163,8 +164,95 @@ def messagesPage(request):
 
     if group_id:
         group = Group.objects.get(id=group_id)
-        members = group.user_set.all()
-        context = {'members': members, 'group': group}
+
+        user = request.user
+        members = group.user_set.exclude(id=user.id)
+
+        # Get the last message between the user and each member
+        for member in members:
+            messages_between = (
+                user.sent_messages.filter(recipient=member) |
+                user.received_messages.filter(sender=member)
+            ).order_by('-timestamp')
+
+            # Number of unread messages that the user has not read yet frrom the member
+            unread_count = user.received_messages.filter(sender=member, read=False).count()
+            member.unread_count = unread_count
+
+
+            if messages_between.exists():
+                last_message = messages_between.first()
+
+                member.last_message = last_message.content
+                member.last_message_time = last_message.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            else:
+                member.last_message = None
+
+        context = {
+            'members': members,
+            'group': group
+        }
+
     else:
-        redirect('home')
+        return redirect('home')
     return render(request, 'base/messages.html', context)
+
+
+@login_required(login_url='login')
+def get_messages(request, member_id):
+    if request.method == 'GET':
+        try:
+            member = User.objects.get(id=member_id)
+            user = request.user
+
+            
+            messages_between = (
+                user.sent_messages.filter(recipient=member) |
+                user.received_messages.filter(sender=member)
+            ).order_by('timestamp')
+
+            
+            messages_data = [
+                {
+                    'sender': message.sender.username,
+                    'recipient': message.recipient.username,
+                    'content': message.content,
+                    'timestamp': message.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+                    'read': message.read,
+                    'is_sender': message.sender == user,
+                }
+                for message in messages_between
+            ]
+
+            # Mark messages as read
+            unread_messages = messages_between.filter(read=False)
+            unread_messages.update(read=True)
+
+            return JsonResponse({'messages': messages_data}, safe=False)
+
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Member does not exist'}, status=404)
+        
+
+
+@login_required(login_url='login')
+def send_message(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)  # Parse JSON data
+
+            member_id = data.get('member_id')
+            content = data.get('content')
+
+            if not member_id or not content:
+                return messages.error(request, 'Member ID and content are required.')
+
+            member = User.objects.get(id=member_id)
+            user = request.user
+
+            message = member_messages.objects.create(sender=user, recipient=member, content=content)
+            message.save()
+            return JsonResponse({'success': 'Message sent successfully'}, status=200)
+        except User.DoesNotExist:
+            messages.error(request, 'Member does not exist.')
+            return redirect('messages')

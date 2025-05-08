@@ -14,16 +14,46 @@
             <h2>{{ group }}</h2>
             <div class="member-list">
                 {% for member in members %}
-                    <div class="member">
-                        <h3>{{ member.first_name }} {{ member.last_name }}</h3>
+                    {% if member.id != request.user.id %}
+                    <div class="member" id="{{ member.id }}" onclick="getMessages('{{ member.id }}')">
+                        <i class="fa-solid fa-circle-user"></i>
+                        <div class="last-message-info">
+                            <div class="name-time">
+                                <h3>{{ member.first_name }} {{ member.last_name }}</h3>
+                                {% if member.last_message %}
+                                <p class="last-message-time">{{member.last_message_time}}</p>
+                                {% endif %}
+                            </div>
+                            {% if member.last_message %}
+                                <p class="last-message">
+                                    {{ member.last_message|slice:":60" }}{% if member.last_message|length > 60 %}...{% endif %}
+                                </p>
+                            {% endif %}
+                            {% if member.unread_count %}
+                            <div class="unread-count">
+                                <p>{{ member.unread_count }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
         <div class="messages-group">
-            
+            <div class="message-list" id="messages-list"></div>
+            <div class="message-input">
+                <div class="message-input-content">
+                    <textarea type="text" id="message-input" placeholder="Type your message here..." rows="1"></textarea>
+                    <button id="send-message" onclick="sendMessage()">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </main>
+
+<script src="{% static 'js/messages.js' %}"></script>
 
 {% endblock %}

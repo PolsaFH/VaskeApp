@@ -19,9 +19,9 @@
     {% endif %}
 
     {% if messages %}
-        <div class="messages">
+        <div class="messages-server">
             {% for message in messages %}
-                <div class="message {{ message.tags }}">
+                <div class="message-server {{ message.tags }}">
                     {{ message }}
                 </div>
             {% endfor %}

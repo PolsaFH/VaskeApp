@@ -397,8 +397,6 @@ function sendSchematic() {
     });
 }
 
-
-// Helper function to get CSRF token from cookies
 function getCSRFToken() {
     const cookies = document.cookie.split(';');
     for (let cookie of cookies) {
