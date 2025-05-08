@@ -225,7 +225,7 @@ def get_messages(request, member_id):
             ]
 
             # Mark messages as read
-            unread_messages = messages_between.filter(read=False)
+            unread_messages = messages_between.filter(read=False, recipient=user)
             unread_messages.update(read=True)
 
             return JsonResponse({'messages': messages_data}, safe=False)

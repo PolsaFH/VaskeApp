@@ -58,6 +58,7 @@ function getMessages(id) {
             messageElement.innerHTML = `
                 <pre>${message.content}</pre>
                 <small>${message.timestamp}</small>
+                <small>${message.read ? 'Read' : 'Unread'}</small>
             `;
 
             if (message.read == false && message.is_sender == false && new_messages == false) {
