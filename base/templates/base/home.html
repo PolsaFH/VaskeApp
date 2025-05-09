@@ -14,32 +14,38 @@
     <div class="container">
         <div class="parent">
             <div class="welcome grid">
-                <h1>Welcome to the Home Page</h1>
-                <p>"Daily plan" are made automatically based on your preferences, to get your plan you must first make your schematic: Navigate the navbar and click make schematic. </p>
+                <h1><i class="fa-solid fa-house"></i> Welcome to the Home Page</h1>
+                <p>"Daily plan" is made automatically based on your preferences. To get your plan, you must first make your schematic: Navigate the navbar and click "Make Schematic".</p>
             </div>
             <div class="group grid">
-                <h1>List of groups</h1>
+                <h1><i class="fa-solid fa-users"></i> List of Groups</h1>
                 <div class="group-list">
-                    {% for group in groups  %}
-                        <a href="{% url 'set_active_group' group.id %}">{{group.name}}</a> <br>
+                    {% for group in groups %}
+                        <a href="{% url 'set_active_group' group.id %}">
+                            <i class="fa-solid fa-user-group"></i> {{ group.name }}
+                        </a> <br>
                     {% endfor %}
                 </div>
             </div>
             <div class="dailyplan grid">
-                <h1>Daily plan</h1>
+                <h1><i class="fa-solid fa-calendar-check"></i> Daily Plan</h1>
                 <div class="dailyplan-list">
                     {% for plan in plans %}
-                        <a href="{% url 'daily_plan' plan.id %}">{{ plan.name }}</a> <br>
+                        <a href="{% url 'daily_plan' plan.id %}">
+                            <i class="fa-solid fa-list-check"></i> {{ plan.name }}
+                        </a> <br>
                     {% endfor %}
                 </div>
             </div>
 
             <div class="schematic grid">
-                <h1>Your floor</h1>
+                <h1><i class="fa-solid fa-map"></i> Your Floor</h1>
                 <div class="schematic-list">
                     <select id="select" onchange="changeSchemInPage(this.value)">
                         {% for schem in schems %}
-                            <option value="{{ schem.id }}">{{ schem.name }}</option>
+                            <option value="{{ schem.id }}">
+                                <i class="fa-solid fa-layer-group"></i> {{ schem.name }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
