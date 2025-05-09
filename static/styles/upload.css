@@ -116,3 +116,99 @@
 .width-text {
   font-size: 1.5rem;
 }
+
+.editor-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.schematic-name-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.schematic-label {
+  font-size: 1rem;
+  color: #555;
+}
+
+.schematic-input {
+  width: 80%;
+  max-width: 400px;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.next-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.next-button i {
+  font-size: 1.2rem;
+}
+
+.next-button:hover {
+  background-color: #0056b3;
+}
+
+.editor-title i {
+  margin-right: 10px; 
+  font-size: 1.5em; 
+  color: #007bff; 
+}
+
+.input-button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+}
+
+.schematic-input {
+  flex: 1; 
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.next-button {
+  padding: 10px 15px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px; 
+}
+
+.next-button i {
+  font-size: 1.2rem;
+}
+
+.next-button:hover {
+  background-color: #0056b3;
+}

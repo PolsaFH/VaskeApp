@@ -14,10 +14,27 @@
 
 
 <main class="content text-center">
-  <h1>Floor Plan Editor</h1>
-  <div id="schematic-name">
-    <input type="text" id="schematic-name-input" placeholder="Enter schematic name" required>
-    <input type="button" value="Neste" id="next-button" onclick="showSchematicEditor()">
+  <h1 class="editor-title">
+    <i class="fa-solid fa-pencil-ruler"></i> Floor Plan Editor
+  </h1>
+  <div id="schematic-name" class="schematic-name-container">
+    <label for="schematic-name-input" class="schematic-label">Enter new name, or edit existing schematic by using the same name</label>
+    <div class="input-button-container">
+      <input 
+        type="text" 
+        id="schematic-name-input" 
+        class="schematic-input" 
+        placeholder="Enter schematic name" 
+        required
+      >
+      <button 
+        id="next-button" 
+        class="next-button" 
+        onclick="showSchematicEditor()"
+      >
+        <i class="fa-solid fa-arrow-right"></i> Next
+      </button>
+    </div>
   </div>
   <div id="schematic-editor" style="display: none;">
     <div class="button-container">
@@ -29,25 +46,25 @@
         <p class="width-text">Width: <span id="width"></span>m</p>
       </div>
       <div id="container"></div>
-<div class="maker-buttons-container">
-    <button onclick="toggleMakerButtons()" id="maker-menu-button">
-        <i class="fa-solid fa-caret-down"></i>
-    </button>
-    <div class="maker-buttons" id="maker-buttons">
-        <button onclick="addWall()">
-            <i class="fa-solid fa-border-all"></i> Add Wall
+      <div class="maker-buttons-container">
+        <button onclick="toggleMakerButtons()" id="maker-menu-button">
+            <i class="fa-solid fa-caret-down"></i>
         </button>
-        <button onclick="addDoor()">
-            <i class="fa-solid fa-door-open"></i> Add Door
-        </button>
-        <button onclick="addZone()">
-            <i class="fa-solid fa-vector-square"></i> Add Zone
-        </button>
-        <button onclick="clearCanvas()">
-            <i class="fa-solid fa-trash"></i> Clear
-        </button>
+        <div class="maker-buttons" id="maker-buttons">
+            <button onclick="addWall()">
+                <i class="fa-solid fa-border-all"></i> Add Wall
+            </button>
+            <button onclick="addDoor()">
+                <i class="fa-solid fa-door-open"></i> Add Door
+            </button>
+            <button onclick="addZone()">
+                <i class="fa-solid fa-vector-square"></i> Add Zone
+            </button>
+            <button onclick="clearCanvas()">
+                <i class="fa-solid fa-trash"></i> Clear
+            </button>
+        </div>
     </div>
-</div>
     </div>
     <!-- <div id="output"></div> -->
   </div>
