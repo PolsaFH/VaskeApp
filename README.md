@@ -53,3 +53,4 @@ TODO:
 * [ ] Lage templates for maker (peer review)
 * [ ] Fikse at admins kan putte på admin role på andre
 * [ ] message knapp på member side.
+* [ ] Legge opp ny schem med zone info
