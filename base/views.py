@@ -6,7 +6,12 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
 
-from .models import schematics, messages as member_messages
+from .models import schematics, messages as member_messages, GroupAdmin
+
+def is_admin(user, group):
+    # check if user is in the admin group
+    return GroupAdmin.objects.filter(user=user, group=group).exists()
+
 
 def loginPage(request):
     if request.user.is_authenticated:
@@ -134,7 +139,7 @@ def members(request):
     if group_id:
         group = Group.objects.get(id=group_id)
         members = group.user_set.all()
-        context = {'members': members, 'group': group}
+        context = {'members': members, 'group': group, 'is_admin': is_admin(request.user, group)}
     else:
         redirect('home')
     
@@ -144,6 +149,9 @@ def members(request):
 @login_required(login_url='login')
 def remove_member(request, group_id, member_id):
     if request.method == 'POST':
+        if not is_admin(request.user, group_id):
+            messages.error(request, 'You do not have permission to remove members from this group.')
+            return redirect('members')
         try:
             user = User.objects.get(id=member_id)
             group = Group.objects.get(id=group_id)

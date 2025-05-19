@@ -20,12 +20,14 @@
                 <div class="messagebtn">
                     <a href=""><i class="fa-solid fa-message"></i></a>
                 </div>
+                {% if is_admin %}
                 <div class="remove">
                     <form action="{% url 'remove_member' group.id member.id %}" id="{{ member.id }}" method="post">
                         {% csrf_token %}
                         <button type="button" class="remove-button" onclick="confirmRemove('{{ member.id }}')"><i class="fa-solid fa-user-xmark"></i></button>
                     </form>
                 </div>
+                {% endif %}
             </div>
         {% endfor %}
     </div>

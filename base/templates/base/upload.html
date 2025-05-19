@@ -17,7 +17,7 @@
   <h1 class="editor-title">
     <i class="fa-solid fa-pencil-ruler"></i> Floor Plan Editor
   </h1>
-  <div id="schematic-name" class="schematic-name-container">
+  <div id="schematic-name" class="schematic-name-container pageChange">
     <label for="schematic-name-input" class="schematic-label">Enter new name, or edit existing schematic by using the same name</label>
     <div class="input-button-container">
       <input 
@@ -30,16 +30,16 @@
       <button 
         id="next-button" 
         class="next-button" 
-        onclick="showSchematicEditor()"
+        onclick="showSchematicEditor('schematic-editor')"
       >
-        <i class="fa-solid fa-arrow-right"></i> Next
+        Next <i class="fa-solid fa-arrow-right"></i>
       </button>
     </div>
   </div>
-  <div id="schematic-editor" style="display: none;">
+  <div id="schematic-editor" class="schematic-editor pageChange" style="display: none;">
     <div class="button-container">
       <button onclick="restartMaker()" class="restart button-top">Restart</button>
-      <button onclick="sendSchematic()" class="submit button-top">Submit</button>
+      <button onclick="showSchematicEditor('schematic-zone')" class="submit button-top">Next <i class="fa-solid fa-arrow-right"></i></button>
     </div>
     <div class="maker-view">
       <div class="width-container">
@@ -65,8 +65,18 @@
             </button>
         </div>
     </div>
+  </div>
+
+    <div id="output"></div>
+
+  </div>
+  <div class="schematic-zone pageChange" style="display: none;">
+    <div class="button-container">
+      <button onclick="showSchematicEditor('schematic-editor')" class="submit button-top"><i class="fa-solid fa-arrow-left"></i> back</button>
+      <button onclick="sendSchematic()" class="send-submit button-top">Submit</button>
     </div>
-    <!-- <div id="output"></div> -->
+    <h2>How many times a month should zones be washed</h2>
+    <div id="zones"></div>
   </div>
 </main>
 

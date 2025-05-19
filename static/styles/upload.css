@@ -96,12 +96,14 @@
 }
 
 .submit {
-  background-color: lightgreen;
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .submit:hover {
   background-color: white;
-  border: 1px solid lightgreen;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
 }
 
 .width-container {
@@ -150,28 +152,6 @@
   border-radius: 5px;
 }
 
-.next-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.next-button i {
-  font-size: 1.2rem;
-}
-
-.next-button:hover {
-  background-color: #0056b3;
-}
-
 .editor-title i {
   margin-right: 10px; 
   font-size: 1.5em; 
@@ -196,13 +176,14 @@
   padding: 10px 15px;
   font-size: 1rem;
   color: #fff;
-  background-color: #007bff;
-  border: none;
+  background-color: var(--primary-color);
+  border: 2px solid transparent;
   border-radius: 5px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 5px; 
+  transition: .3s ease all;
 }
 
 .next-button i {
@@ -210,5 +191,47 @@
 }
 
 .next-button:hover {
-  background-color: #0056b3;
+  background-color: white;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+#zones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.zone-input-div {
+  padding: 20px;
+  width: 95%;
+  max-width: 400px;
+  margin: 0 auto;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+}
+
+.zone-input-div label {
+  font-size: 1.3rem;
+  text-align: left;
+}
+
+.zone-input-div input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.send-submit {
+  background-color: lightgreen;
+}
+
+.send-submit:hover {
+  background-color: white;
+  border: 1px solid lightgreen;
+  color: black;
 }

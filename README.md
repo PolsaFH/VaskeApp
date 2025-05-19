@@ -22,7 +22,7 @@ TODO:
   * [X] Lage at schematic man starter på er lagra, slik at man ikke trenger å gjøre alt på nytt
   * [X] Lage upload-schematic api for å lagre schematicen
   * [X] tenke på om jeg heller skal bruke localstorage, så kan den evt cleare alt om den skal starte på en ny
-* [ ] Redigere schematics
+* [ ] admin Redigere schematics
 * [X] Add Schematic to group
 * [X] Hovre over floorplan navbar så skal alle schematics i gruppa komme opp
 * [X] Lage firkanter i rom (status)
@@ -40,8 +40,8 @@ TODO:
 * [ ] Fikse slik at tekst på sone også forsvinner
 * [ ] Fikse at home schem visning er bare schem med daily plan
 * [X] Sjekke om messages funker
-* [ ] lage notification side (aksepter gruppe inv)
-* [ ] fikse slik at bare gruppe leder kan fjerne brukere fra gruppa
+* [ ] lage notification side (aksepter gruppe inv og se mld varsler)
+* [X] fikse slik at bare gruppe leder kan fjerne brukere fra gruppa
 * [X] Lage melding side
 
   * [X] vise alle medlemmer som man kan sende melding til
@@ -50,3 +50,6 @@ TODO:
   * [X] legge til uleste meldinger ("new messages")
   * [X] Redigere slik at meldingene er lest
   * [ ] må oppdatere med en gang personen går inn på meldingene at de
+* [ ] Lage templates for maker (peer review)
+* [ ] Fikse at admins kan putte på admin role på andre
+* [ ] message knapp på member side.

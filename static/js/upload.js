@@ -25,7 +25,6 @@ function getRandomColor() {
 }
 
 function addElement(type, options) {
-    
     let item = new Konva.Rect({
         x: Math.round((options.x || 100) / gridSize) * gridSize,
         y: Math.round((options.y || 100) / gridSize) * gridSize,
@@ -35,9 +34,9 @@ function addElement(type, options) {
         draggable: true,
         rotation: options.rotation || 0,
         type: type,
-        name: options.name || type, // Use the name from options or default to type
+        name: options.name || type,
+        times_a_month: options.times_a_month || undefined // Add times_a_month if provided
     });
-
 
     if (type === "Door") {
         item.moveToTop();
@@ -145,7 +144,9 @@ function addElement(type, options) {
         y: item.y(),
         width: item.width(),
         height: item.height(),
-        rotation: item.rotation()
+        rotation: item.rotation(),
+        name: type === "Zone" ? options.name : undefined,
+        times_a_month: type === "Zone" ? options.times_a_month : undefined // Include times_a_month in elements
     });
 
     if (type === "Zone") {
@@ -181,7 +182,6 @@ function addElement(type, options) {
 
     layer.draw();
     updateOutput();
-
 }
 
 function addDoor() {
@@ -242,14 +242,15 @@ function updateOutput() {
     elements = layer.children.filter(item => item.className === 'Rect').map(item => ({
         type: item.attrs.type,
         name: item.attrs.type === 'Zone' ? item.attrs.name : undefined, // Include the zone name if it's a zone
+        times_a_month: item.attrs.type === 'Zone' ? item.attrs.times_a_month : undefined, // Include the times_a_month if it's a zone
         x: Math.round(item.x()),
         y: Math.round(item.y()),
         width: item.width(),
         height: item.height(),
         rotation: item.rotation()
     }));
-    // document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
-    localStorage.setItem('schematicData', JSON.stringify(elements));
+    document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
+    localStorage.setItem('schematicData', JSON.stringify(elements)); // Save updated data to localStorage
 }
 
 function exportSchematic() {
@@ -309,16 +310,31 @@ stage.on("wheel", (e) => {
 
 });
 
-function showSchematicEditor() {
-    if (document.getElementById('schematic-name-input').value === "") {
-        alert("Please enter a name for the schematic.");
-        return;
+function showSchematicEditor(classDiv) {
+    for (let i = 0; i < document.getElementsByClassName('pageChange').length; i++) {
+
+        if (classDiv == "schematic-editor") {
+            if (document.getElementById('schematic-name-input').value === "") {
+                alert("Please enter a name for the schematic.");
+                return;
+            } 
+            localStorage.setItem('schematicName', document.getElementById('schematic-name-input').value);
+        }
+
+        if (classDiv == "schematic-zone") {
+            const schematicData = localStorage.getItem('schematicData');
+            if (!schematicData) {
+                alert("Please make a schematic.");
+                return;
+            }
+
+            showZoneInputs();
+        }
+
+        document.getElementsByClassName('pageChange')[i].style.display = 'none';
     }
 
-    localStorage.setItem('schematicName', document.getElementById('schematic-name-input').value);
-
-    document.getElementById('schematic-name').style.display = 'none';
-    document.getElementById('schematic-editor').style.display = 'block';
+    document.getElementsByClassName(classDiv)[0].style.display = 'block';
 }
 
 // Gjenopprett lagrede data fra localStorage
@@ -336,10 +352,12 @@ window.onload = () => {
                     width: item.width,
                     height: item.height,
                     fill: item.type === 'Wall' ? 'black' : item.type === 'Door' ? 'brown' : item.type === 'Zone' ? zoneColors[item.name] : 'blue',
-                    name: item.type === 'Zone' ? item.name : undefined, // Include the zone name if it's a zone
+                    name: item.type === 'Zone' ? item.name : undefined,
+                    times_a_month: item.type === 'Zone' ? item.times_a_month : undefined, // Restore times_a_month
                     rotation: item.rotation
                 });
             });
+
         } catch (error) {
             console.error("Failed to load schematic data:", error);
         }
@@ -369,6 +387,28 @@ function sendSchematic() {
         return;
     }
 
+    // check if every zone iput has a value
+    const ZoneInput = document.getElementsByClassName('zone-input');
+    for (let i = 0; i < ZoneInput.length; i++) {
+        if (ZoneInput[i].value === "") {
+            const emptyZone = document.getElementById(ZoneInput[i].id);
+            emptyZone.style.border = "2px solid red";
+
+            // Scroll to the empty zone
+            emptyZone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            emptyZone.focus();
+            emptyZone.placeholder = "Please fill in this zone";
+            emptyZone.addEventListener('input', () => {
+                emptyZone.style.border = "none";
+                emptyZone.placeholder = "Enter value";
+            });
+
+            alert("Please fill in all zone inputs.");
+            return;
+        }
+    };
+
+    return;
     fetch('/upload-schematic/', {
         method: 'POST',
         headers: {
@@ -427,4 +467,58 @@ function restartMaker() {
     document.getElementById('schematic-name').style.display = 'block';
     document.getElementById('schematic-editor').style.display = 'none';
     document.getElementById('schematic-name-input').value = "";
+}
+
+function showZoneInputs() {
+    const schematicData = localStorage.getItem('schematicData');
+    if (!schematicData) {
+        alert("No schematic data to show.");
+        return;
+    }
+    const parsedData = JSON.parse(schematicData);
+    const zoneInputsContainer = document.getElementById('zones');
+
+    zoneInputsContainer.innerHTML = ""; // Clear previous inputs
+
+    parsedData.forEach(item => {
+        if (item.type === 'Zone') {
+            // Make div for zone inputs
+            const zoneDiv = document.createElement('div');
+            zoneDiv.className = 'zone-input-div';
+            zoneDiv.style.backgroundColor = zoneColors[item.name]
+            zoneInputsContainer.appendChild(zoneDiv);
+
+            // Create a label for the zone
+            const zoneLabel = document.createElement('label');
+            zoneLabel.textContent = item.name;
+            zoneLabel.className = 'zone-label';
+            zoneDiv.appendChild(zoneLabel);
+
+            // Create a new input for each zone
+            const zoneInput = document.createElement('input');
+            zoneInput.type = 'number';
+            zoneInput.value = item.times_a_month || undefined; // Default value
+            zoneInput.placeholder = "Enter value";
+            zoneInput.min = 0;
+            zoneInput.id = item.name;
+            zoneInput.className = 'zone-input';
+            zoneInput.addEventListener('input', (e) => {
+                const value = e.target.value;
+                parsedData.forEach((zone) => {
+                    if (zone.type === 'Zone' && zone.name === item.name) {
+                        zone.times_a_month = value; // Update the value in the parsed data
+
+                        // Update the Konva element's attributes
+                        const konvaElement = layer.children.find(child => child.attrs.name === item.name && child.attrs.type === 'Zone');
+                        if (konvaElement) {
+                            konvaElement.attrs.times_a_month = value;
+                        }
+                    }
+                });
+                localStorage.setItem('schematicData', JSON.stringify(parsedData)); // Save updated data to localStorage
+                updateOutput();
+            });
+            zoneDiv.appendChild(zoneInput);
+        }
+    });
 }

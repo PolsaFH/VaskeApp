@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import schematics
-from .models import messages
+from .models import schematics, messages, GroupAdmin
 from django.forms import Textarea
 from django.db import models
 
@@ -25,6 +24,13 @@ class MessagesAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.TextField: {"widget": Textarea(attrs={"rows": 4, "cols": 40})},  # Makes TextField more readable
     }
+
+@admin.register(GroupAdmin)
+class GroupAdminAdmin(admin.ModelAdmin):
+    list_display = ("user", "group")
+    search_fields = ("user__username", "group__name")
+    ordering = ("user__username",)
+    list_filter = ("group",)
 
 
 
