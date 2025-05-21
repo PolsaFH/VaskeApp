@@ -2,16 +2,6 @@
 
 Project for web application exam
 
-Filip er mye bedre enn Elias -Elon Musk
-
-open file
-
-python3 manage.py runserver
-
-Elias TODO:
-
-* [ ] Legg til iconer for knappene i make shcematic.
-
 TODO:
 
 * [ ] Registerings side, med join link til gruppen
