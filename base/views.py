@@ -139,6 +139,12 @@ def members(request):
     if group_id:
         group = Group.objects.get(id=group_id)
         members = group.user_set.all()
+
+        # Check if all the members are admins
+        for member in members:
+            member.is_admin = is_admin(member, group)
+
+
         context = {'members': members, 'group': group, 'is_admin': is_admin(request.user, group)}
     else:
         redirect('home')
@@ -236,7 +242,7 @@ def get_messages(request, member_id):
             unread_messages = messages_between.filter(read=False, recipient=user)
             unread_messages.update(read=True)
 
-            return JsonResponse({'messages': messages_data}, safe=False)
+            return JsonResponse({'messages': messages_data, "fullname": f"{member.first_name} {member.last_name}" }, safe=False)
 
         except User.DoesNotExist:
             return JsonResponse({'error': 'Member does not exist'}, status=404)
@@ -264,3 +270,26 @@ def send_message(request):
         except User.DoesNotExist:
             messages.error(request, 'Member does not exist.')
             return redirect('messages')
+        
+
+
+@login_required(login_url='login')
+def notificationsPage(request):
+    return render(request, 'base/notifications.html')
+
+@login_required(login_url='login')
+def change_admin_role(request, group_id, member_id):
+    if request.method == 'POST' and is_admin(request.user, group_id):
+        group = Group.objects.get(id=group_id)
+        member = User.objects.get(id=member_id)
+
+        if is_admin(member, group):
+            # Remove admin role
+            GroupAdmin.objects.filter(user=member, group=group).delete()
+            messages.success(request, f'{member.first_name} is no longer an admin.')
+        else:
+            # Add admin role
+            GroupAdmin.objects.create(user=member, group=group)
+            messages.success(request, f'{member.first_name} is now an admin.')
+
+    return redirect('members')

@@ -27,6 +27,19 @@
                         <button type="button" class="remove-button" onclick="confirmRemove('{{ member.id }}')"><i class="fa-solid fa-user-xmark"></i></button>
                     </form>
                 </div>
+                <div class="give-admin-role">
+                    {% if not member.is_admin %}
+                        <form action="{% url 'change_admin_role' group.id member.id %}" id="admin-{{ member.id }}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="admin-button give-admin-button" onclick="confirmChangeAdmin('admin-{{ member.id }}', 'add')"><i class="fa-solid fa-user-shield"></i></button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'change_admin_role' group.id member.id %}" id="admin-{{ member.id }}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="admin-button remove-admin-button" onclick="confirmChangeAdmin('admin-{{ member.id }}', 'remove')"><i class="fa-solid fa-user-shield"></i></button>
+                        </form>
+                    {% endif %}
+                </div>
                 {% endif %}
             </div>
         {% endfor %}

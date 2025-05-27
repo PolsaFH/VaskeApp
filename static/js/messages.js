@@ -47,6 +47,8 @@ function getMessages(id) {
             return;
         }
 
+        document.getElementById('message-name').textContent = data.fullname;
+
         data.messages.forEach(message => {
             const messageElement = document.createElement('div');
             messageElement.className = 'message-item';
@@ -72,8 +74,12 @@ function getMessages(id) {
             messagesContainer.appendChild(messageElement);
         });
 
+        document.getElementById('group-members').classList.toggle('mobile');
+        document.getElementById('toggleMobileButton').classList.toggle('mobile-button');
+
         // Scroll to the bottom after messages are loaded
         scrollToBottom();
+
     })
     .catch(error => console.error('Error fetching messages:', error));
 }
@@ -112,4 +118,9 @@ function sendMessage() {
         getMessages(currentId);
     })
     .catch(error => console.error('Error sending message:', error));
+}
+
+function toggleMobile() {
+    document.getElementById('group-members').classList.toggle('mobile');
+    document.getElementById('toggleMobileButton').classList.toggle('mobile-button');
 }

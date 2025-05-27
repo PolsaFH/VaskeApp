@@ -4,7 +4,7 @@ Project for web application exam
 
 TODO:
 
-* [ ] Registerings side, med join link til gruppen
+* [ ] Registerings side
 * [ ] Force login
 * [X] fjerne navbar om de ikke er logget inn eller ikke valgt gruppe enda
 * [X] Inserte schematics når man er ferdig
@@ -40,7 +40,8 @@ TODO:
   * [X] legge til uleste meldinger ("new messages")
   * [X] Redigere slik at meldingene er lest
   * [ ] må oppdatere med en gang personen går inn på meldingene at de
+  * [X] Responsive design til messages
 * [ ] Lage templates for maker (peer review)
-* [ ] Fikse at admins kan putte på admin role på andre
+* [X] Fikse at admins kan putte på admin role på andre
 * [ ] message knapp på member side.
 * [ ] Legge opp ny schem med zone info

@@ -9,8 +9,9 @@
 {% block content %}
 
 <main class="content">
+    <button onclick="toggleMobile()" class="toggleMobileButton mobile-button" id="toggleMobileButton"><i class="fa-solid fa-arrow-right"></i></button>
     <div class="messages-container">
-        <div class="group-members">
+        <div class="group-members mobile" id="group-members">
             <h2>{{ group }}</h2>
             <div class="member-list">
                 {% for member in members %}
@@ -41,7 +42,10 @@
             </div>
         </div>
         <div class="messages-group">
-            <div class="message-list" id="messages-list"></div>
+            <div class="message-list-container">
+                <h2 class="message-name" id="message-name"></h2>
+                <div class="message-list" id="messages-list"></div>
+            </div>
             <div class="message-input">
                 <div class="message-input-content">
                     <textarea type="text" id="message-input" placeholder="Type your message here..." rows="1"></textarea>

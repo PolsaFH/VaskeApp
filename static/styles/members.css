@@ -53,3 +53,17 @@
     font-size: 20px;
     cursor: pointer;
 }
+
+.give-admin-button {
+    color: black;
+}
+.remove-admin-button {
+    color: red;
+}
+
+.admin-button {
+    background-color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
