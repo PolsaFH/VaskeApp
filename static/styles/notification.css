@@ -1,0 +1,53 @@
+.header {
+    text-align: center;
+}
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.notification-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+    border-bottom: 1px solid black;
+    padding: 10px;
+}
+
+.aswear-button {
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.accept-button {
+    background-color: green;
+    margin-right: 5px;
+}
+
+.decline-button {
+    background-color: red;
+}
+
+.group-info-notification {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.group-info-notification p {
+    font-size: 1.2rem;
+}
+
+.message-button {
+    color: var(--primary-color);
+    padding: 5px;
+    text-decoration: none;
+    font-size: 1.4rem;
+}

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
 
-from .models import schematics, messages as member_messages, GroupAdmin
+from .models import schematics, messages as member_messages, GroupAdmin, invitations
 
 def is_admin(user, group):
     # check if user is in the admin group
@@ -275,7 +275,33 @@ def send_message(request):
 
 @login_required(login_url='login')
 def notificationsPage(request):
-    return render(request, 'base/notifications.html')
+    user = request.user
+
+    group_id = request.session.get('active_group_id')
+
+    if group_id:
+        group = Group.objects.get(id=group_id)
+
+        user = request.user
+        members = group.user_set.exclude(id=user.id)
+
+        for member in members:
+
+            # Number of unread messages that the user has not read yet frrom the member
+            unread_count = user.received_messages.filter(sender=member, read=False).count()
+            member.unread_count = unread_count
+    else:
+        members = []
+
+    # Get all invitations for the user
+    invitations_list = invitations.objects.filter(user=user)
+
+    context = {
+        'members': members,
+        'invitations': invitations_list,
+    }
+
+    return render(request, 'base/notifications.html', context)
 
 @login_required(login_url='login')
 def change_admin_role(request, group_id, member_id):
@@ -293,3 +319,52 @@ def change_admin_role(request, group_id, member_id):
             messages.success(request, f'{member.first_name} is now an admin.')
 
     return redirect('members')
+
+
+@login_required(login_url='login')
+def invite_member(request, group_id):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+
+        try:
+            user = User.objects.get(username=username)
+            group = Group.objects.get(id=group_id)
+
+            # Check if the user is already a member of the group
+            if user in group.user_set.all():
+                messages.error(request, f'{user.first_name} is already a member of this group.')
+            else:
+                # Create an invitation
+                invitation = invitations.objects.create(group=group, user=user)
+                invitation.save()
+                messages.success(request, f'Invitation sent to {user.first_name}.')
+        except User.DoesNotExist:
+            messages.error(request, 'User does not exist.')
+        except Group.DoesNotExist:
+            messages.error(request, 'Group does not exist.')
+        
+    
+    return redirect('members')
+
+
+@login_required(login_url='login')
+def answer_invitation(request, response, invitation_id):
+    try:
+        invitation = invitations.objects.get(id=invitation_id)
+
+        if response == 'accept':
+            # Add user to the group
+            group = invitation.group
+            user = invitation.user
+            group.user_set.add(user)
+            messages.success(request, f'You have joined the group {group.name}.')
+        elif response == 'decline':
+            messages.info(request, 'Invitation declined.')
+
+        # Delete the invitation after responding
+        invitation.delete()
+    except invitations.DoesNotExist:
+        messages.error(request, 'Invitation does not exist.')
+
+    return redirect('home')
+

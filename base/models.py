@@ -13,6 +13,7 @@ class schematics(models.Model):
         return self.name
 
 
+
 class messages(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
@@ -34,3 +35,18 @@ class GroupAdmin(models.Model):
 
     def __str__(self):
         return f"{self.user.username} is admin of {self.group.name}"
+
+
+
+class invitations(models.Model):
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    meta = {
+        'unique_together': ('group', 'user'),
+        'ordering': ['-created_at'],
+    }
+
+    def __str__(self):
+        return f"Invitation to {self.user.username} for group {self.group.name}"

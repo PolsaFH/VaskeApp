@@ -60,7 +60,7 @@ function getMessages(id) {
             messageElement.innerHTML = `
                 <pre>${message.content}</pre>
                 <small>${message.timestamp}</small>
-                <small>${message.read ? 'Read' : 'Unread'}</small>
+                <small>${message.read ? message.is_sender ?  '<i class="fa-solid fa-check"></i>' : '' : ''}</small>
             `;
 
             if (message.read == false && message.is_sender == false && new_messages == false) {
@@ -74,8 +74,8 @@ function getMessages(id) {
             messagesContainer.appendChild(messageElement);
         });
 
-        document.getElementById('group-members').classList.toggle('mobile');
-        document.getElementById('toggleMobileButton').classList.toggle('mobile-button');
+        document.getElementById('group-members').classList.remove('mobile');
+        document.getElementById('toggleMobileButton').classList.remove('mobile-button');
 
         // Scroll to the bottom after messages are loaded
         scrollToBottom();

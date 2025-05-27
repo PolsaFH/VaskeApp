@@ -10,6 +10,15 @@
 
 <main class="content">
     <h1 class="header">Members of {{ group }}</h1>
+    {% if is_admin %}
+    <div class="invite-member">
+        <form action="{% url 'invite_member' group.id %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Enter username to invite" class="invite-input" required>
+            <button type="submit" class="invite-button">Invite</button>
+        </form>
+    </div>
+    {% endif %}
     <div class="member-container">
         {% for member in members %}
             <div class="member">

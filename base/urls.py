@@ -22,4 +22,7 @@ urlpatterns = [
     path('notifications/', views.notificationsPage, name='notifications'),
 
     path('members/admin/role/<str:group_id>/<int:member_id>/', views.change_admin_role, name='change_admin_role'),
+
+    path("group/invite/<str:group_id>", views.invite_member, name="invite_member"),
+    path("group/invite/answer/<str:response>/<int:invitation_id>", views.answer_invitation, name="answer_invitation"),
 ]

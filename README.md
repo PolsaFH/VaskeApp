@@ -21,16 +21,17 @@ TODO:
   * [ ] og hva som ble vasket
 * [ ] Equipment side
 * [ ] daily plan side
-* [ ] Notifications side
+* [X] Notifications side
+
+  * [ ] Bell på navbar må ha signal som viser at klient har notifikasjoner
 * [X] Finne ut hva 3 og 4 på home siden skal være
 * [ ] Finne ut hva Setting skal inne holde
 * [X] lage member side så man kan se hvem er i gruppen, sende melding og kaste ut brukere
-* [ ] legge til at en dør har standar størrelse (liten - 60,cm, medium - 1m, large - 1,8m)
 * [X] legge til soner når et rom blir etablert
 * [ ] Fikse slik at tekst på sone også forsvinner
 * [ ] Fikse at home schem visning er bare schem med daily plan
 * [X] Sjekke om messages funker
-* [ ] lage notification side (aksepter gruppe inv og se mld varsler)
+* [X] lage notification side (aksepter gruppe inv og se mld varsler)
 * [X] fikse slik at bare gruppe leder kan fjerne brukere fra gruppa
 * [X] Lage melding side
 
@@ -43,5 +44,6 @@ TODO:
   * [X] Responsive design til messages
 * [ ] Lage templates for maker (peer review)
 * [X] Fikse at admins kan putte på admin role på andre
-* [ ] message knapp på member side.
+* [ ] message knapp på member side og notification side.
 * [ ] Legge opp ny schem med zone info
+* [ ] Lage at man kan lage nye grupper

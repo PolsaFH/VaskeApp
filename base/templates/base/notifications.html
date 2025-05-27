@@ -3,13 +3,48 @@
 {% load static %}
 
 {% block head %}
-<link rel="stylesheet" href="{% static 'styles/members.css' %}">
+<link rel="stylesheet" href="{% static 'styles/notification.css' %}">
 {% endblock %}
 
 {% block content %}
 
 <main class="content">
-    
+    <div class="notification-content">
+        <h1 class="header">Group notifications</h1>
+        <div class="notification-list">
+            {% if invitations or members %}
+                {% for invitation in invitations %}
+                    <div class="notification-item">
+                        <div class="group-info-notification">
+                            <p>{{ invitation.group }} has invited you to their group</p>
+                        </div>
+                        <div class="aswear-button-container">
+                            <a href="{% url 'answer_invitation' 'accept' invitation.id %}" class="accept-button aswear-button"><i class="fa-solid fa-check"></i></a>
+                            <a href="{% url 'answer_invitation' 'decline' invitation.id %}" class="decline-button aswear-button"><i class="fa-solid fa-x"></i></a>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                {% for member in members %}
+                    {% if member.unread_count > 0 %}
+                    <div class="notification-item">
+                        <div class="group-info-notification">
+                            <p>You have {{ member.unread_count }} unread messages from {{ member.first_name }} {{ member.last_name|slice:":1" }}.</p>
+                            <p class="unread-messages-count"></p>
+                        </div>
+                        <div class="aswear-button-container">
+                            <a href="" class="message-button"><i class="fa-solid fa-message"></i></a>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="notification-item">
+                    <p class="no-notifications">You have no notifications.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </main>
 
 {% endblock %}
