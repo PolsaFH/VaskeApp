@@ -33,36 +33,39 @@
         <h1 class="loginHeader">Register</h1>
         <form action="" method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <input type="text" name="first_name" id="first_name" class="form-input" placeholder=" " required>
-                <label for="first_name" class="form-label">First name:</label>
+            <div class="step" id="first" style="display: block;">
+                <h2>Enter your personal information</h2>
+                <div class="form-group">
+                    <input type="text" name="first_name" id="first_name" class="form-input" placeholder="" required>
+                    <label for="first_name" class="form-label">First name:</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="last_name" id="last_name" class="form-input" placeholder="" required>
+                    <label for="last_name" class="form-label">Last name:</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" id="email" class="form-input" placeholder="" required>
+                    <label for="email" class="form-label">Email:</label>
+                </div>
+                <p>Already have an account? <a href="./">Login here</a></p>
+                <input type="button" value="Next" onclick="nextStep('second')">
             </div>
-            <div class="form-group">
-                <input type="text" name="last_name" id="last_name" class="form-input" placeholder=" " required>
-                <label for="last_name" class="form-label">Last name:</label>
+            <div class="step" id="second" style="display: none;">
+                <h2>Choose a username and password</h2>
+                <div class="form-group">
+                    <input type="text" name="username" id="username" class="form-input" placeholder="" required>
+                    <label for="username" class="form-label">Username:</label>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" id="password" class="form-input" placeholder="" required>
+                    <label for="password" class="form-label">Password:</label>
+                </div>
+                <input type="submit" value="Register" name="choose">
             </div>
-            <div class="form-group">
-                <input type="email" name="email" id="email" class="form-input" placeholder=" " required>
-                <label for="email" class="form-label">Email:</label>
-            </div>
-            <div class="form-group">
-                <input type="text" name="username" id="username" class="form-input" placeholder=" " required>
-                <label for="username" class="form-label">Username:</label>
-            </div>
-            <div class="form-group">
-                <input type="password" name="password" id="password" class="form-input" placeholder=" " required>
-                <label for="password" class="form-label">Password:</label>
-            </div>
-            <p>Already have an account? <a href="./">Login here</a></p>
-            <input type="submit" value="Register" name="choose">
         </form>
     </div>
     {% endif %}
-
 </main>
 
-<script>
-
-</script>
-
+<script src="{% static 'js/login_register.js' %}"></script>
 {% endblock %}

@@ -29,16 +29,12 @@
             </div>
             <div class="dailyplan grid">
                 <h1><i class="fa-solid fa-calendar-check"></i> Daily Plan</h1>
-                <div class="dailyplan-list">
-                    {% for plan in plans %}
-                        <a href="{% url 'daily_plan' plan.id %}">
-                            <i class="fa-solid fa-list-check"></i> {{ plan.name }}
-                        </a> <br>
-                    {% endfor %}
+                <div class="dailyplan-list" id="dailyplan-list">
+                    
                 </div>
             </div>
 
-            <div class="schematic grid">
+            <div class="schematic grid" id="schematic">
                 <h1><i class="fa-solid fa-map"></i> Your Floor</h1>
                 <div class="schematic-list">
                     <select id="select" onchange="changeSchemInPage(this.value)">
@@ -55,6 +51,12 @@
     </div>
 </main>
 
+
+<script>
+    let KonvaWidth = document.getElementById('schematic').offsetWidth - 40;
+    let KonvaHeight = 300;
+</script>
+
 <script src="{% static 'js/home.js' %}"></script>
 
 <script type="application/json" id="schematics-data">
@@ -63,11 +65,7 @@
 
 <script>
     const schems = JSON.parse(document.getElementById('schematics-data').textContent);
-    schems.forEach((schematicData, index) => {
-        if (index === 0) {
-            importSchematic(schematicData);
-        }
-    });
+    importSchematic(schems[0]);
 </script>
 
 

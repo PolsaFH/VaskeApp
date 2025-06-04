@@ -2,13 +2,33 @@ const gridSize = 10;
 
 const stage = new Konva.Stage({
     container: 'container',
-    width: 300,
-    height: 300,
+    width: KonvaWidth,
+    height: KonvaHeight,
     draggable: true
 });
 
 const layer = new Konva.Layer();
 stage.add(layer);
+
+// Function to calculate if the room should be washed
+function lased_washed(last_washed, times_a_month) {
+    const lastWashedDate = new Date(last_washed);
+    const today = new Date();
+    const daysSinceLastWash = Math.floor((today - lastWashedDate) / (1000 * 60 * 60 * 24));
+    const daysPerWash = 30 / times_a_month;
+
+    if (daysPerWash - daysSinceLastWash <= 1) {
+        return "yellow";
+    } else if (daysPerWash - daysSinceLastWash <= 0) {
+        return "red";
+    } else {
+        return "green";
+    }
+}
+
+function addToDailyPlan(name, last_washed) {
+    
+}
 
 function addElement(type, options) {
     let item = new Konva.Rect({
@@ -23,6 +43,29 @@ function addElement(type, options) {
     });
 
     layer.add(item);
+
+    // If it's a Zone, add the zone name in the middle
+    if (type === 'Zone' && options.name) {
+        const zoneText = new Konva.Text({
+            text: options.name,
+            fontSize: 16,
+            fontFamily: 'Arial',
+            fill: 'black',
+            align: 'center',
+            verticalAlign: 'middle',
+            width: item.width(),
+            height: item.height(),
+            x: item.x(),
+            y: item.y(),
+            listening: false // Make the text non-interactive
+        });
+        // Center the text inside the rectangle
+        zoneText.x(item.x() + (item.width() - zoneText.width()) / 2);
+        zoneText.y(item.y() + (item.height() - zoneText.height()) / 2);
+
+        layer.add(zoneText);
+    }
+
     layer.draw();
 }
 
@@ -36,8 +79,9 @@ function importSchematic(data) {
             y: item.y,
             width: item.width,
             height: item.height,
-            fill: item.type === 'Wall' ? 'black' : item.type === 'Door' ? 'brown' : item.type === 'Zone' ? 'red' : 'blue',
-            rotation: item.rotation
+            fill: item.type === 'Wall' ? 'black' : item.type === 'Door' ? 'brown' : item.type === 'Zone' ? lased_washed(item.last_washed, item.times_a_month) : 'blue',
+            rotation: item.rotation,
+            name: item.name
         });
 
         // Update bounding box

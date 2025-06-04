@@ -158,6 +158,28 @@
     color: white;
 }
 
+.header-menu {
+    margin-top: 20px;
+    padding: 5px;
+    font-size: 1.1rem;
+    color: #cecece;
+}
 
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    display: inline-block;
+    text-align: center;
+    line-height: 12px;
+    z-index: 10;
+    border: 2px solid white;
+}
 
 

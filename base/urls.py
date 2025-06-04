@@ -25,4 +25,9 @@ urlpatterns = [
 
     path("group/invite/<str:group_id>", views.invite_member, name="invite_member"),
     path("group/invite/answer/<str:response>/<int:invitation_id>", views.answer_invitation, name="answer_invitation"),
+    path("group/create", views.make_group, name="make_group"),
+    path("group/select", views.select_group, name="select_group"),
+
+
+    path('daily/', views.daily_plan, name='daily_plan'),
 ]

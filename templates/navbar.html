@@ -6,7 +6,12 @@
     {% endif %}
     <h1 class="logo"><a href="{% url 'home' %}">Vaske App</a></h1>
     <div class="notification">
-      <a href="{% url 'notifications' %}"><i class="fa-solid fa-bell notification-icon"></i></a>
+      <a href="{% url 'notifications' %}">
+        <i class="fa-solid fa-bell notification-icon"></i>
+        {% if has_notifications %}
+          <span class="notification-badge">{{ notification_count }}</span>
+        {% endif %}
+      </a>
     </div>
 </header>
 <div class="navbar">
@@ -33,8 +38,30 @@
       </div>
     </li>
     {% if request.session.active_group_id %}
+    <li class="header-menu">Group</li>
+    <li>
+      <a href="{% url 'members' %}">
+        <i class="fas fa-user-friends"></i> Group members
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'messages' %}">
+        <i class="fa-solid fa-message"></i> Messages
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'daily_plan' %}">
+        <i class="fa-solid fa-calendar-check"></i> Daily Plan
+      </a>
+    </li>
+    <li>
+      <a href="#Equipment">
+        <i class="fas fa-tools"></i> Equipment
+      </a>
+    </li>
+    <li class="header-menu">Schematics</li>
     <li class="has-submenu">
-      <a href="">
+      <a href="{% url 'schematic_group' request.session.active_group_id %}">
         <i class="fas fa-map"></i> Floor plan
       </a>
       <div class="submenu">
@@ -50,34 +77,19 @@
       </div>
     </li>
     <li>
-      <a href="#dailyPlan">
-        <i class="fa-solid fa-calendar-check"></i> Daily Plan
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'members' %}">
-        <i class="fas fa-user-friends"></i> Group members
-      </a>
-    </li>
-    <li>
-      <a href="#Equipment">
-        <i class="fas fa-tools"></i> Equipment
-      </a>
-    </li>
-    <li>
       <a href="{% url 'upload' %}">
         <i class="fas fa-upload"></i> Make schematic
       </a>
     </li>
     <li>
-      <a href="{% url 'messages' %}">
-        <i class="fa-solid fa-message"></i> Messages
+      <a href="{% url 'make_group' %}">
+        <i class="fa-solid fa-plus"></i> Create group
       </a>
     </li>
     {% endif %}
   </ul>
   <div class="bottom-links">
-      <a href="#privacy">
+      <a href="#settings">
         <i class="fas fa-cog"></i> Settings
       </a>
       {% if request.user.is_authenticated %}

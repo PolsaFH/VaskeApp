@@ -10,9 +10,19 @@
 
 <main class="content">
     <div class="schems_list">
-        {% for schem in schems %}
-            <a href="{% url 'schematic' schem.id %}">{{ schem.name }}</a>
-        {% endfor %}
+        {% if request.session.active_group_id %}
+            <h2>Floor plans for group</h2>
+            {% if schems %}
+                {% for schem in schems %}
+                    <a href="{% url 'schematic' schem.id %}">{{ schem.name }}</a>
+                {% endfor %}
+            {% else %}
+                <p>No schems available.</p>
+            {% endif %}
+        {% else %}
+            <h1>No active group selected</h1>
+        {% endif %}
+
     </div>
 </main>
 

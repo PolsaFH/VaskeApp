@@ -19,11 +19,20 @@
 </main>
 
 
-<script src="{% static 'js/view_schematic.js' %}"></script>
+<script>
+    let KonvaWidth = window.innerWidth * 0.8;
+    let KonvaHeight = window.innerHeight * 0.8;
+</script>
+
+<script src="{% static 'js/home.js' %}"></script>
+
+<script type="application/json" id="schematics-data">
+    {{ schems_data|safe }}
+</script>
 
 <script>
-    var schematicData = JSON.parse('{{ schematic_data|escapejs }}'); 
-    importSchematic(schematicData);
+    const schems = JSON.parse(document.getElementById('schematics-data').textContent);
+    importSchematic(schems[0]);
 </script>
 
 

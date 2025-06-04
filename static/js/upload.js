@@ -17,6 +17,27 @@ stage.add(layer);
 
 let zoneColors = {};
 
+// Helper to get next zone id (persistent)
+function getNextZoneId() {
+    let currentId = parseInt(localStorage.getItem('zoneIdCounter') || '1', 10);
+    localStorage.setItem('zoneIdCounter', (currentId + 1).toString());
+    return currentId;
+}
+
+// Helper to get or assign a persistent id for a zone name
+function getZoneIdByName(zoneName) {
+    let zoneNameToId = JSON.parse(localStorage.getItem('zoneNameToId') || '{}');
+    if (zoneNameToId[zoneName]) {
+        return zoneNameToId[zoneName];
+    }
+    // Get next id
+    let currentId = parseInt(localStorage.getItem('zoneIdCounter') || '1', 10);
+    zoneNameToId[zoneName] = currentId;
+    localStorage.setItem('zoneNameToId', JSON.stringify(zoneNameToId));
+    localStorage.setItem('zoneIdCounter', (currentId + 1).toString());
+    return currentId;
+}
+
 function getRandomColor() {
     const random1 = Math.floor(Math.random() * 256); // Random value between 0-255
     const random2 = Math.floor(Math.random() * 256);
@@ -25,6 +46,13 @@ function getRandomColor() {
 }
 
 function addElement(type, options) {
+    // Add today's date if it's a Zone and last_washed is not set
+    if (type === "Zone" && !options.last_washed) {
+        const today = new Date();
+        // Format as YYYY-MM-DD
+        options.last_washed = today.toISOString().split('T')[0];
+    }
+
     let item = new Konva.Rect({
         x: Math.round((options.x || 100) / gridSize) * gridSize,
         y: Math.round((options.y || 100) / gridSize) * gridSize,
@@ -35,7 +63,9 @@ function addElement(type, options) {
         rotation: options.rotation || 0,
         type: type,
         name: options.name || type,
-        times_a_month: options.times_a_month || undefined // Add times_a_month if provided
+        id: options.id,
+        times_a_month: options.times_a_month || undefined,
+        last_washed: type === "Zone" ? options.last_washed : undefined // Add last_washed for zones
     });
 
     if (type === "Door") {
@@ -76,6 +106,9 @@ function addElement(type, options) {
         document.getElementById("maker-buttons").appendChild(deleteButton);
 
         deleteButton.addEventListener('click', () => {
+            if (item.zoneText) {
+                item.zoneText.destroy(); // Destroy the text
+            }
             item.destroy();
             tr.destroy();
             deleteButton.remove();
@@ -112,6 +145,7 @@ function addElement(type, options) {
         newHeight = Math.max(10, newHeight);
 
         document.getElementById('width').textContent = newWidth / 100;
+        document.getElementById('height').textContent = newHeight / 100;
 
         // Reset scale to avoid cumulative scaling issues
         item.scaleX(1);
@@ -146,7 +180,9 @@ function addElement(type, options) {
         height: item.height(),
         rotation: item.rotation(),
         name: type === "Zone" ? options.name : undefined,
-        times_a_month: type === "Zone" ? options.times_a_month : undefined // Include times_a_month in elements
+        id: type === "Zone" ? options.id : undefined,
+        times_a_month: type === "Zone" ? options.times_a_month : undefined,
+        last_washed: type === "Zone" ? options.last_washed : undefined // Store last_washed in elements
     });
 
     if (type === "Zone") {
@@ -166,6 +202,8 @@ function addElement(type, options) {
         });
         zoneText.x(item.x() + (item.width() - zoneText.width()) / 2);
         zoneText.y(item.y() + (item.height() - zoneText.height()) / 2);
+
+        item.zoneText = zoneText; // Add this line
 
         item.on('dragmove', () => {
             zoneText.x(item.x() + (item.width() - zoneText.width()) / 2);
@@ -206,6 +244,7 @@ function addWall() {
     addElement('Wall', { width: 200, height: 10, fill: 'black' });
 }
 
+// Add id to zone when created, using name-to-id mapping
 function addZone() {
     const zoneName = prompt("Enter a name for the zone:");
     if (!zoneName) {
@@ -216,18 +255,22 @@ function addZone() {
     // Assign a random color to the zone name if it doesn't already have one
     if (!zoneColors[zoneName]) {
         zoneColors[zoneName] = getRandomColor();
-        localStorage.setItem('zoneColors', JSON.stringify(zoneColors)); // Save to localStorage
+        localStorage.setItem('zoneColors', JSON.stringify(zoneColors));
     }
 
-    // Add the zone with the assigned color
+    // Get id for this zone name (same id for same name)
+    const zoneId = getZoneIdByName(zoneName);
+
     addElement('Zone', {
-        width: 100, // Default width
-        height: 100, // Default height
-        fill: zoneColors[zoneName], // Use the assigned color
-        name: zoneName // Store the zone name
+        width: 100,
+        height: 100,
+        fill: zoneColors[zoneName],
+        name: zoneName,
+        id: zoneId
     });
 }
 
+// Reset zone id counter when clearing canvas
 function clearCanvas() {
     layer.destroyChildren();
     elements = [];
@@ -236,20 +279,23 @@ function clearCanvas() {
 
     // Fjern data fra localStorage
     localStorage.removeItem('schematicData');
+    localStorage.removeItem('zoneIdCounter'); // Reset zone id counter
+    localStorage.removeItem('zoneNameToId'); // Clear mapping
 }
 
 function updateOutput() {
     elements = layer.children.filter(item => item.className === 'Rect').map(item => ({
         type: item.attrs.type,
         name: item.attrs.type === 'Zone' ? item.attrs.name : undefined, // Include the zone name if it's a zone
+        id: item.attrs.type === 'Zone' ? item.attrs.id : undefined, // Include id
         times_a_month: item.attrs.type === 'Zone' ? item.attrs.times_a_month : undefined, // Include the times_a_month if it's a zone
+        last_washed: item.attrs.type === 'Zone' ? item.attrs.last_washed : undefined, // Include last_washed if it's a zone
         x: Math.round(item.x()),
         y: Math.round(item.y()),
         width: item.width(),
         height: item.height(),
         rotation: item.rotation()
     }));
-    document.getElementById('output').innerHTML = `<pre>${JSON.stringify(elements, null, 2)}</pre>`;
     localStorage.setItem('schematicData', JSON.stringify(elements)); // Save updated data to localStorage
 }
 
@@ -258,6 +304,7 @@ function exportSchematic() {
     updateOutput();
 }
 
+// When importing or restoring, update the mapping so it stays in sync
 function importSchematic() {
     const inputData = prompt("Paste your JSON data:");
     if (!inputData) return;
@@ -265,6 +312,8 @@ function importSchematic() {
     try {
         const parsedData = JSON.parse(inputData);
         clearCanvas();
+        let maxZoneId = 0;
+        let zoneNameToId = {};
         parsedData.forEach(item => {
             addElement(item.type, {
                 x: item.x,
@@ -272,14 +321,27 @@ function importSchematic() {
                 width: item.width,
                 height: item.height,
                 fill: item.type === 'Wall' ? 'black' : item.type === 'Door' ? 'brown' : 'blue',
-                rotation: item.rotation
+                rotation: item.rotation,
+                name: item.type === 'Zone' ? item.name : undefined,
+                times_a_month: item.type === 'Zone' ? item.times_a_month : undefined,
+                last_washed: item.type === 'Zone' ? item.last_washed : undefined, // Restore last_washed
+                id: item.type === 'Zone' ? item.id : undefined
             });
+            if (item.type === 'Zone') {
+                zoneNameToId[item.name] = item.id;
+                if (item.id > maxZoneId) {
+                    maxZoneId = item.id;
+                }
+            }
         });
+        if (maxZoneId > 0) {
+            localStorage.setItem('zoneIdCounter', (maxZoneId + 1).toString());
+        }
+        localStorage.setItem('zoneNameToId', JSON.stringify(zoneNameToId));
     } catch (error) {
         alert("Invalid JSON data.");
     }
 }
-
 
 // Zooming functionality with Ctrl + Scroll
 let zoomTimeout;
@@ -345,6 +407,8 @@ window.onload = () => {
         try {
             const parsedData = JSON.parse(savedData);
             zoneColors = savedZoneColors ? JSON.parse(savedZoneColors) : {};
+            let zoneNameToId = {};
+            let maxZoneId = 0;
             parsedData.forEach(item => {
                 addElement(item.type, {
                     x: item.x,
@@ -354,10 +418,21 @@ window.onload = () => {
                     fill: item.type === 'Wall' ? 'black' : item.type === 'Door' ? 'brown' : item.type === 'Zone' ? zoneColors[item.name] : 'blue',
                     name: item.type === 'Zone' ? item.name : undefined,
                     times_a_month: item.type === 'Zone' ? item.times_a_month : undefined, // Restore times_a_month
-                    rotation: item.rotation
+                    last_washed: item.type === 'Zone' ? item.last_washed : undefined, // Restore last_washed
+                    id: item.type === 'Zone' ? item.id : undefined, // Restore id
+                    rotation: item.rotation,
                 });
+                if (item.type === 'Zone') {
+                    zoneNameToId[item.name] = item.id;
+                    if (item.id > maxZoneId) {
+                        maxZoneId = item.id;
+                    }
+                }
             });
-
+            if (maxZoneId > 0) {
+                localStorage.setItem('zoneIdCounter', (maxZoneId + 1).toString());
+            }
+            localStorage.setItem('zoneNameToId', JSON.stringify(zoneNameToId));
         } catch (error) {
             console.error("Failed to load schematic data:", error);
         }
@@ -387,7 +462,7 @@ function sendSchematic() {
         return;
     }
 
-    // check if every zone iput has a value
+    // check if every zone input has a value
     const ZoneInput = document.getElementsByClassName('zone-input');
     for (let i = 0; i < ZoneInput.length; i++) {
         if (ZoneInput[i].value === "") {
@@ -408,7 +483,6 @@ function sendSchematic() {
         }
     };
 
-    return;
     fetch('/upload-schematic/', {
         method: 'POST',
         headers: {
@@ -477,48 +551,56 @@ function showZoneInputs() {
     }
     const parsedData = JSON.parse(schematicData);
     const zoneInputsContainer = document.getElementById('zones');
-
     zoneInputsContainer.innerHTML = ""; // Clear previous inputs
 
+    // Collect unique zones by id
+    const uniqueZones = {};
     parsedData.forEach(item => {
-        if (item.type === 'Zone') {
-            // Make div for zone inputs
-            const zoneDiv = document.createElement('div');
-            zoneDiv.className = 'zone-input-div';
-            zoneDiv.style.backgroundColor = zoneColors[item.name]
-            zoneInputsContainer.appendChild(zoneDiv);
-
-            // Create a label for the zone
-            const zoneLabel = document.createElement('label');
-            zoneLabel.textContent = item.name;
-            zoneLabel.className = 'zone-label';
-            zoneDiv.appendChild(zoneLabel);
-
-            // Create a new input for each zone
-            const zoneInput = document.createElement('input');
-            zoneInput.type = 'number';
-            zoneInput.value = item.times_a_month || undefined; // Default value
-            zoneInput.placeholder = "Enter value";
-            zoneInput.min = 0;
-            zoneInput.id = item.name;
-            zoneInput.className = 'zone-input';
-            zoneInput.addEventListener('input', (e) => {
-                const value = e.target.value;
-                parsedData.forEach((zone) => {
-                    if (zone.type === 'Zone' && zone.name === item.name) {
-                        zone.times_a_month = value; // Update the value in the parsed data
-
-                        // Update the Konva element's attributes
-                        const konvaElement = layer.children.find(child => child.attrs.name === item.name && child.attrs.type === 'Zone');
-                        if (konvaElement) {
-                            konvaElement.attrs.times_a_month = value;
-                        }
-                    }
-                });
-                localStorage.setItem('schematicData', JSON.stringify(parsedData)); // Save updated data to localStorage
-                updateOutput();
-            });
-            zoneDiv.appendChild(zoneInput);
+        if (item.type === 'Zone' && item.id !== undefined) {
+            if (!uniqueZones[item.id]) {
+                uniqueZones[item.id] = item;
+            }
         }
+    });
+
+    Object.values(uniqueZones).forEach(item => {
+        // Make div for zone inputs
+        const zoneDiv = document.createElement('div');
+        zoneDiv.className = 'zone-input-div';
+        zoneDiv.style.backgroundColor = zoneColors[item.name];
+        zoneInputsContainer.appendChild(zoneDiv);
+
+        // Create a label for the zone
+        const zoneLabel = document.createElement('label');
+        zoneLabel.textContent = item.name;
+        zoneLabel.className = 'zone-label';
+        zoneDiv.appendChild(zoneLabel);
+
+        // Create a new input for each unique zone id
+        const zoneInput = document.createElement('input');
+        zoneInput.type = 'number';
+        zoneInput.value = item.times_a_month || '';
+        zoneInput.placeholder = "Enter value";
+        zoneInput.min = 0;
+        zoneInput.id = `zone-input-${item.id}`;
+        zoneInput.className = 'zone-input';
+        zoneInput.addEventListener('input', (e) => {
+            const value = e.target.value;
+            // Update all zones with this id in parsedData
+            parsedData.forEach((zone) => {
+                if (zone.type === 'Zone' && zone.id === item.id) {
+                    zone.times_a_month = value;
+                }
+            });
+            // Update all Konva elements with this id
+            layer.children.forEach(child => {
+                if (child.attrs && child.attrs.type === 'Zone' && child.attrs.id === item.id) {
+                    child.attrs.times_a_month = value;
+                }
+            });
+            localStorage.setItem('schematicData', JSON.stringify(parsedData));
+            updateOutput();
+        });
+        zoneDiv.appendChild(zoneInput);
     });
 }

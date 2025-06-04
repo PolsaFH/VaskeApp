@@ -1,5 +1,13 @@
-import json
 from django.contrib.auth.models import Group
+from .models import invitations, messages
+from django.shortcuts import render, redirect
+import json
+
+def check_active_group(request):
+    active_group_id = request.session.get('active_group_id')
+    if not active_group_id and request.user.is_authenticated:
+        print("Her burde man redirect")
+    return {}
 
 def active_group_context(request):
     active_group_id = request.session.get('active_group_id')
@@ -38,3 +46,31 @@ def active_group_context(request):
         "active_group_name": active_group_name if active_group_name else None,
         "user_groups": user_groups if user_groups else [],
     }
+
+def notification_status(request):
+    if request.user.is_authenticated:
+        user = request.user
+
+        group_id = request.session.get('active_group_id')
+
+        count = invitations.objects.filter(
+            user_id=user
+        ).count()
+
+        if group_id:
+            group = Group.objects.get(id=group_id)
+
+            user = request.user
+            members = group.user_set.exclude(id=user.id)
+            for member in members:
+                # Count unread messages from each member
+                unread_count = user.received_messages.filter(sender=member, read=False).count()
+                count += unread_count
+        else:
+            count = 0
+
+        return {
+            'has_notifications': count > 0,
+            'notification_count': count,
+        }
+    return {}

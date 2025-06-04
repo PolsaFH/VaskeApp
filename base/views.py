@@ -48,10 +48,17 @@ def loginPage(request):
             first_name = request.POST.get('first_name')
             last_name = request.POST.get('last_name')
 
-            user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
-            user.save()
+            try:
+                user = User.objects.create_user(username=username, password=password, email=email, first_name=first_name, last_name=last_name)
+                user.save()
+            except Exception as e:
+                messages.error(request, f'Error creating user: {str(e)}')
+                return redirect('login')
+
+            login(request, user)
+
             messages.success(request, 'User created successfully!')
-            return redirect('login')
+            return redirect('home')
     
     context = {'type': request.GET.get('type')}
     return render(request, 'base/login_register.html', context)
@@ -368,3 +375,39 @@ def answer_invitation(request, response, invitation_id):
 
     return redirect('home')
 
+@login_required(login_url='login')
+def make_group(request):
+    if request.method == 'POST':
+        group_name = request.POST.get('group_name')
+        if not group_name:
+            messages.error(request, 'Group name is required.')
+            return redirect('make_group')
+
+        # Create the group
+        group = Group.objects.create(name=group_name)
+        group.save()
+
+        # Add the user to the group
+        user = request.user
+        group.user_set.add(user)
+
+        # Create a GroupAdmin entry for the user
+        GroupAdmin.objects.create(user=user, group=group)
+
+        # Set the group as the active group for the user
+        request.session['active_group_id'] = group.id
+
+        messages.success(request, f'Group "{group_name}" created successfully!')
+        return redirect('make_group')
+
+    return render(request, 'base/make_group.html')
+
+
+@login_required(login_url='login')
+def daily_plan(request):
+    return render(request, 'base/daily_plan.html')
+
+
+@login_required(login_url='login')
+def select_group(request):
+    return render(request, 'base/select_group.html')

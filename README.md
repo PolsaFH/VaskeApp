@@ -4,7 +4,7 @@ Project for web application exam
 
 TODO:
 
-* [ ] Registerings side
+* [X] Registerings side
 * [ ] Force login
 * [X] fjerne navbar om de ikke er logget inn eller ikke valgt gruppe enda
 * [X] Inserte schematics når man er ferdig
@@ -17,18 +17,19 @@ TODO:
 * [X] Hovre over floorplan navbar så skal alle schematics i gruppa komme opp
 * [X] Lage firkanter i rom (status)
 
-  * [ ] lage dato sist vasket
-  * [ ] og hva som ble vasket
+  * [X] lage dato sist vasket
 * [ ] Equipment side
 * [ ] daily plan side
 * [X] Notifications side
 
-  * [ ] Bell på navbar må ha signal som viser at klient har notifikasjoner
+  * [X] Bell på navbar må ha signal som viser at klient har notifikasjoner
 * [X] Finne ut hva 3 og 4 på home siden skal være
 * [ ] Finne ut hva Setting skal inne holde
+
+  * [ ] slette gruppe
 * [X] lage member side så man kan se hvem er i gruppen, sende melding og kaste ut brukere
 * [X] legge til soner når et rom blir etablert
-* [ ] Fikse slik at tekst på sone også forsvinner
+* [X] Fikse slik at tekst på sone også forsvinner
 * [ ] Fikse at home schem visning er bare schem med daily plan
 * [X] Sjekke om messages funker
 * [X] lage notification side (aksepter gruppe inv og se mld varsler)
@@ -40,10 +41,12 @@ TODO:
   * [X] legge til send messages
   * [X] legge til uleste meldinger ("new messages")
   * [X] Redigere slik at meldingene er lest
-  * [ ] må oppdatere med en gang personen går inn på meldingene at de
   * [X] Responsive design til messages
 * [ ] Lage templates for maker (peer review)
 * [X] Fikse at admins kan putte på admin role på andre
 * [ ] message knapp på member side og notification side.
-* [ ] Legge opp ny schem med zone info
-* [ ] Lage at man kan lage nye grupper
+* [X] Legge opp ny schem med zone info
+* [X] Lage at man kan lage nye grupper
+* [X] Kategorisere navbar
+* [ ] Endre tekst på Welcome to the home page
+* [ ] Må velge aktiv gruppe før man kan gjøre noe
