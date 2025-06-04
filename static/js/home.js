@@ -127,7 +127,7 @@ function GetEstimatedTime(zone_id, schem_id) {
             if (data.status === 'success') {
                 const estimatedTime = data.estimated_time;
                 const timeDisplay = document.getElementById('estimated-time');
-                timeDisplay.textContent = `Estimated time: ${estimatedTime} seconds`;
+                timeDisplay.textContent = estimatedTime;
             } else {
                 console.error('Error fetching estimated time:', data.message);
             }
@@ -195,10 +195,10 @@ startStopBtn.addEventListener('click', () => {
         const elapsed = Math.floor((Date.now() - startTime) / 1000);
         console.log(`Timer stopped at ${elapsed} seconds.`);
 
-        if (elapsed < 60) {
-            alert('You need to wash the zone for at least 1 minute!');
-            return;
-        }
+        // if (elapsed < 60) {
+        //     alert('You need to wash the zone for at least 1 minute!');
+        //     return;
+        // }
 
         const schem_id_select = document.getElementById('select').value;
 

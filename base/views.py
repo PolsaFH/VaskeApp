@@ -126,7 +126,7 @@ def upload(request):
 def upload_schematic(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)  # Parse JSON data
+            data = json.loads(request.body)
             schematic_name = data.get('schematic_name')
             schematic_json = data.get('schematic_json')
             group_id = request.session.get('active_group_id')
