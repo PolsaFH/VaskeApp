@@ -1,0 +1,30 @@
+{% extends 'main.html' %}
+
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'styles/select_group.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<main class="content">
+    <div class="container">
+        <h2>Your groups</h2>
+        <p>Please select a group that you are going to work on</p>
+        <div class="group-list">
+            {% for group in user_groups %}
+                <div class="group-item">
+                    <a href="{% url 'set_active_group' group.id %}">
+                        <i class="fa-solid fa-user-group"></i> {{ group.name }}
+                    </a>
+                </div>
+            {% empty %}
+                <p>No groups available. Go <a href="{% url 'make_group' %}">here</a> to create a group</p>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}

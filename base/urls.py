@@ -28,6 +28,6 @@ urlpatterns = [
     path("group/create", views.make_group, name="make_group"),
     path("group/select", views.select_group, name="select_group"),
 
-
-    path('daily/', views.daily_plan, name='daily_plan'),
+    path('zone/washed/', views.washed_zones, name='washed_zones'),
+    path('zone/estimated_time/<int:zone_id>/<int:schem_id>/', views.estimated_time, name='clean_zone'),
 ]

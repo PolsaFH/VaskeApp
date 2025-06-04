@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import schematics, messages, GroupAdmin
+from .models import schematics, messages, GroupAdmin, CleanTime
 from django.forms import Textarea
 from django.db import models
 
@@ -32,5 +32,10 @@ class GroupAdminAdmin(admin.ModelAdmin):
     ordering = ("user__username",)
     list_filter = ("group",)
 
+@admin.register(CleanTime)
+class CleanTimeAdmin(admin.ModelAdmin):
+    list_display = ("user", "schematic", "zone_id", "time_spent")
+    search_fields = ("user__username", "schematic__name", "zone_id")
+    ordering = ("-time_spent",)
 
 

@@ -4,7 +4,7 @@
     {% if request.user.is_authenticated %}
     <button class="navbar-toggle" onclick="toggleNavbar()">☰</button>
     {% endif %}
-    <h1 class="logo"><a href="{% url 'home' %}">Vaske App</a></h1>
+    <h1 class="logo"><a href="{% url 'home' %}">Cleaning App</a></h1>
     <div class="notification">
       <a href="{% url 'notifications' %}">
         <i class="fa-solid fa-bell notification-icon"></i>
@@ -47,11 +47,6 @@
     <li>
       <a href="{% url 'messages' %}">
         <i class="fa-solid fa-message"></i> Messages
-      </a>
-    </li>
-    <li>
-      <a href="{% url 'daily_plan' %}">
-        <i class="fa-solid fa-calendar-check"></i> Daily Plan
       </a>
     </li>
     <li>

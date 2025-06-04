@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'base.middleware.ActiveGroupRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'VaskeDjango.urls'
@@ -67,7 +68,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'base.context_processors.notification_status',
                 'base.context_processors.active_group_context',
-                'base.context_processors.check_active_group',
             ],
         },
     },

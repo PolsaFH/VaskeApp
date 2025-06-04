@@ -29,9 +29,8 @@
             </div>
             <div class="dailyplan grid">
                 <h1><i class="fa-solid fa-calendar-check"></i> Daily Plan</h1>
-                <div class="dailyplan-list" id="dailyplan-list">
-                    
-                </div>
+                <p>Press the room you would like to clean to start timer</p>
+                <ul class="dailyplan-list" id="dailyplan-list"></ul>
             </div>
 
             <div class="schematic grid" id="schematic">
@@ -49,12 +48,27 @@
             </div>
         </div>
     </div>
+    <div class="timer-wrapper" id="timer-wrapper" style="display: none;">
+        <div class="timer-header">
+            <h1><i class="fa-solid fa-stopwatch"></i> Timer</h1>
+            <p>You are washing for room <span id="washing-room"></span> </p>
+            <p>Estimated time is: <span id="estimated-time"></span></p>
+            <div class="timer-container">
+                <div class="timer-display">
+                    <span id="timer">00:00:00</span>
+                </div>
+                <button id="timer-button" class="timer-button">Start</button>
+            </div>
+            <input type="hidden" id="zone_id_clicked">
+            <div class="close-timer" onclick="document.getElementById('timer-wrapper').style.display = 'none'">x</div>
+        </div>
+    </div>
 </main>
 
 
 <script>
     let KonvaWidth = document.getElementById('schematic').offsetWidth - 40;
-    let KonvaHeight = 300;
+    let KonvaHeight = document.getElementById('schematic').offsetWidth - 40;
 </script>
 
 <script src="{% static 'js/home.js' %}"></script>

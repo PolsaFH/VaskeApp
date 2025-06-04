@@ -27,7 +27,7 @@
                     <p>{{ member.username }}</p>
                 </div>
                 <div class="messagebtn">
-                    <a href=""><i class="fa-solid fa-message"></i></a>
+                    <a href="{% url 'messages' %}?member={{member.id}}"><i class="fa-solid fa-message"></i></a>
                 </div>
                 {% if is_admin %}
                 <div class="remove">

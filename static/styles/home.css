@@ -27,18 +27,6 @@
     border-radius: 16px;
 }
 
-/* .welcome { 
-
-}
-.group { 
-
-}
-.dailyplan { 
-
-}
-.schematic { 
-
-} */
 
 #select {
     padding: 5px 10px;
@@ -47,6 +35,79 @@
     background-color: white;
 
 }
+
+.dailyplan-list {
+    padding: 0 20px;
+}
+
+.dailyplan-list li {
+    padding-left: 10px;
+    font-size: 1.1rem;
+}
+
+.dailyplan-item {
+    border-bottom: 1px solid var(--primary-color);
+    padding: 10px 0;
+}
+
+.timer-wrapper {
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.timer-header {
+    position: relative;
+    background-color: white;
+    width: fit-content;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-display {
+    font-size: 2rem;
+    margin: 20px 0;
+    border: 1px solid black;
+    padding: 3px;
+}
+
+.timer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.timer-button {
+    background-color: green;
+    width: 100px;
+    height: 100px;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.close-timer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: black;
+    font-size: 2rem;
+    cursor: pointer;
+    color: red;
+}
+
+
 
 /* Media query for smaller screens */
 @media (max-width: 768px) {

@@ -124,3 +124,17 @@ function toggleMobile() {
     document.getElementById('group-members').classList.toggle('mobile');
     document.getElementById('toggleMobileButton').classList.toggle('mobile-button');
 }
+
+
+// function to get member id from thr url if it exists
+function getMemberIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('member');
+}
+window.onload = function() {
+    const memberId = getMemberIdFromUrl();
+    console.log('Member ID from URL:', memberId);
+    if (memberId) {
+        document.getElementById(memberId).click();
+    }
+}

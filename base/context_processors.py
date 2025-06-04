@@ -1,13 +1,6 @@
 from django.contrib.auth.models import Group
 from .models import invitations, messages
-from django.shortcuts import render, redirect
 import json
-
-def check_active_group(request):
-    active_group_id = request.session.get('active_group_id')
-    if not active_group_id and request.user.is_authenticated:
-        print("Her burde man redirect")
-    return {}
 
 def active_group_context(request):
     active_group_id = request.session.get('active_group_id')

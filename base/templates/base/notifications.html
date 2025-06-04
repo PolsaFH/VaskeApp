@@ -33,7 +33,7 @@
                             <p class="unread-messages-count"></p>
                         </div>
                         <div class="aswear-button-container">
-                            <a href="" class="message-button"><i class="fa-solid fa-message"></i></a>
+                            <a href="{% url 'messages' %}?member={{member.id}}" class="message-button"><i class="fa-solid fa-message"></i></a>
                         </div>
                     </div>
                     {% endif %}

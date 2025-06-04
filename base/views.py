@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
 
-from .models import schematics, messages as member_messages, GroupAdmin, invitations
+from .models import schematics, messages as member_messages, GroupAdmin, invitations, CleanTime
+from datetime import date, timedelta
 
 def is_admin(user, group):
     # check if user is in the admin group
@@ -82,6 +83,7 @@ def set_active_group(request, group_id):
     try:
         group = Group.objects.get(id=group_id)
         request.session['active_group_id'] = group.id
+        print(f"Active groasdasdasdasdasdasdasdasdasdasdasup set to: {group.name} (ID: {group.id})")
     except Group.DoesNotExist:
         messages.error(request, 'Group does not exist.')
 
@@ -404,10 +406,91 @@ def make_group(request):
 
 
 @login_required(login_url='login')
-def daily_plan(request):
-    return render(request, 'base/daily_plan.html')
+def select_group(request):
+    return render(request, 'base/select_group.html')
 
 
 @login_required(login_url='login')
-def select_group(request):
-    return render(request, 'base/select_group.html')
+def washed_zones(request):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+
+        user = request.user
+        schem_id = data.get('schem_id')
+        zone_id = data.get('zone_id')
+        time_used = data.get('time_used')
+        
+        try:
+            time_used = timedelta(seconds=int(time_used))
+            schem = schematics.objects.get(id=schem_id)
+            time_spent = CleanTime.objects.create(user=user, schematic=schem, time_spent=time_used)
+            time_spent.zone_id = zone_id
+            time_spent.save()
+
+            schem_json = schem.schematic_json
+            # find zone with id zone_id in the schematic json
+            zone_found = None
+            # Ensure zone_id is an integer for comparison
+            zone_id_int = int(zone_id)
+            for item in schem_json:
+                if item.get('type') == 'Zone' and int(item.get('id', 0)) == zone_id_int:
+                    zone_found = item
+                    today_str = date.today().isoformat()
+                    # update last_washed to todays date
+                    zone_found['last_washed'] = today_str
+                    print("Updated zone last_washed to:", today_str)
+                    # update schematic_json in the schematics database and save changes
+                    schem.schematic_json = schem_json
+                    schem.save()
+
+
+            # Removed unused variable assignment
+            messages.success(request, 'Time spent on the schematic has been recorded successfully.')
+            return JsonResponse({'status': 'success', 'message': 'Time recorded successfully'})
+        except schematics.DoesNotExist:
+            messages.error(request, 'Schematic does not exist.')
+            return JsonResponse({'status': 'error', 'message': 'Schematic does not exist'}, status=404)
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return JsonResponse({'status': 'error', 'message': f'An error occurred: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+@login_required(login_url='login')
+def estimated_time(request, zone_id, schem_id):
+    if request.method == 'GET':
+        try:
+            schem = schematics.objects.get(id=schem_id)
+            zone_found = None
+            
+
+            zone_id_int = int(zone_id)
+            area = 0  
+            for item in schem.schematic_json:
+                if item.get('type') == 'Zone' and int(item.get('id', 0)) == zone_id_int:
+                    zone_found = item
+                    area += (int(zone_found["width"]) * int(zone_found["width"])) / 100
+
+            if zone_found:
+                cleantimeList = CleanTime.objects.filter(schematic=schem, zone_id=zone_id)
+                if len(cleantimeList) >= 5:
+                    # Calculate the average time spent on the zone
+                    total_time = sum([ct.time_spent.total_seconds() for ct in cleantimeList])
+                    estimated_time = total_time / len(cleantimeList)
+                else:
+                    estimated_time = area * 0.75
+
+                print(f"Estimated time for zone {zone_id} in schematic {schem.name}: {estimated_time} seconds")
+
+                return JsonResponse({'status': 'success', 'estimated_time': estimated_time}, status=200)
+            else:
+                return JsonResponse({'error': 'Zone not found'}, status=404)
+        except schematics.DoesNotExist:
+            return JsonResponse({'error': 'Schematic does not exist'}, status=404)
+
+
+
+
+
